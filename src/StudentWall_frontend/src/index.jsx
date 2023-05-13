@@ -3,14 +3,18 @@ import { render } from "react-dom";
 import { StudentWall_backend as custom_greeting } from "../../declarations/StudentWall_backend";
 import ReactDOM from "react-dom/client";
 import {
-  createBrowserRouter,
+  createHashRouter,
   RouterProvider,
 } from "react-router-dom";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <div>Hello world!</div>,
+  },
+  {
+    path: "test",
+    element: <div>Hello test!</div>,
   },
 ]);
 

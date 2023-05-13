@@ -1,25 +1,12 @@
-import * as React from "react";
-import { render } from "react-dom";
-import { StudentWall_backend as custom_greeting } from "../../declarations/StudentWall_backend";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  createHashRouter,
-  RouterProvider,
-} from "react-router-dom";
-
-const router = createHashRouter([
-  {
-    path: "/",
-    element: <div>Hello world!</div>,
-  },
-  {
-    path: "test",
-    element: <div>Hello test!</div>,
-  },
-]);
+import { HashRouter } from "react-router-dom"
+import { App } from "./App";
 
 ReactDOM.createRoot(document.getElementById("app")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <HashRouter>
+      <App />
+    </HashRouter>
   </React.StrictMode>
 );

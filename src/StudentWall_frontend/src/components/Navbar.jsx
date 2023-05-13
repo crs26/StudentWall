@@ -7,7 +7,7 @@ export const Navbar = () => {
         const resolvedPath = useResolvedPath(to)
         const isActive = useMatch({ path: resolvedPath.pathname, end: true})
         return (
-            <li className={isActive ? "active" : ""}>
+            <li className={`nav-item  ${isActive ? "active" : ""}`}>
                 <Link to={to} {...props}>
                     {children}
                 </Link>
@@ -16,12 +16,16 @@ export const Navbar = () => {
     }
 
     return (
-        <nav>
-            <Link to="/">Site Name</Link>
-            <ul>
-                <NavLink to="/post">Post</NavLink>
-                <NavLink to="/message">Message</NavLink>
-            </ul>
+        <nav className="navbar navbar-expand-lg bg-dark.bg-gradient">
+            <div className="container-fluid">
+                <Link to="/">IC Freedom Wall</Link>
+                <div className="collapse navbar-collapse">
+                    <ul className="navbar-nav">
+                        <NavLink to="/post">Post</NavLink>
+                        <NavLink to="/message">Message</NavLink>
+                    </ul>
+                </div>
+            </div>
         </nav>
     )
 }

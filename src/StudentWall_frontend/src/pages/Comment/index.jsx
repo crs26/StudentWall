@@ -3,6 +3,7 @@ import { BiUpvote, BiDownvote } from 'react-icons/bi'
 import { Link, useLocation } from "react-router-dom";
 import PostCard from '../../components/PostCard';
 import { StudentWall_backend as backend } from "../../../../declarations/StudentWall_backend";
+import NewComment from '../../components/NewComment';
 
 export const Comment = (props) => {
   const [comments, setComments] = useState();
@@ -20,7 +21,8 @@ export const Comment = (props) => {
   return (
     <div className="container justify-content-center" >
       <PostCard data={data} />
-      {comments?.ok.map((comment, id) => {
+      <NewComment postId={data?.id} />
+      {comments?.ok?.map((comment, id) => {
         return (
           <div key={id} className='my-2 px-2 mx-1'>
             <div className='row post-card justify-content-center'>

@@ -71,6 +71,7 @@ p {
 
 .post-card input[type="text"] {
     font-size: 1rem;
+    color: #fff;
     background: #2C353D;
     border: none;
     border-radius: 10px;
@@ -90,7 +91,8 @@ p {
     transition: ease-in-out all 0.3s;
 }
 
-.post-card textarea:focus {
+.post-card textarea:focus,
+.post-card input[type="text"]:focus {
     outline: none;
     box-shadow: 0 0 1px 2px #ad3f0c;
     transition: ease-in-out all 0.3s;

@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from 'react'
-import { BiUpvote, BiDownvote } from 'react-icons/bi'
+import { BiUpvote, BiDownvote, BiTrash } from 'react-icons/bi'
 import { Link } from '../../../../node_modules/react-router-dom/dist/index'
+import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
 
 export default function PostCard({
   data,
-  id,
   content,
   comments,
   creator,
   title,
   vote }) {
+
   const [propsData, setPropsData] = useState(data);
 
   useEffect(() => {
-    setPropsData({ ...propsData, id: id })
+    setPropsData({ ...propsData, id: Number(data?.id) })
   }, []);
+
+  const upVote = async (id) => {
+    console.log(await backend.upVote(id))
+  }
+
+  const downVote = async (id) => {
+    console.log(await backend.downVote(id))
+  }
+
+  const deletePost = async (id) => {
+    console.log(
+      await backend.deleteMessage(id)
+    );
+  }
 
   return (
     <div className='px-2 mx-1'>
@@ -23,28 +38,33 @@ export default function PostCard({
           <div className='col-1 my-auto'>
             <img src='/user.png' className='user-img my-auto' />
           </div>
-          <div className="col-9">
+          <div className="col-5 col-md-8 col-lg-9 my-auto">
             <div className='d-flex'>
-              <div className='post'>
+              <div className='post my-auto'>
                 <p>
-                  {data?.content?.Text}
+                  {data?.message?.content?.Text}
                 </p>
-                <img className='my-3' src='/sample.jpg' />
+                {/* <img className='my-3' src='/sample.jpg' /> */}
               </div>
             </div>
           </div>
-          <div className="col-2 my-auto">
-            <div className='d-flex justify-content-end gap-3 my-auto text-white'>
-              <BiUpvote />
-              <BiDownvote />
+          <div className="col-6 col-md-3 col-lg-2 my-auto">
+            <div className='my-auto text-white'>
+              <div className='d-flex justify-content-end gap-3 my-auto'>
+                <BiUpvote onClick={() => Number(upVote(data?.id))} />
+                <BiDownvote onClick={() => Number(downVote(data?.id))} />
+              </div>
+              <div className='d-flex justify-content-end mt-3'>
+                <BiTrash onClick={() => Number(deletePost(data?.id))} />
+              </div>
             </div>
           </div>
           <div className="row justify-content-end px-0">
-            <div className="col-2 post-card-footer">
-              <p>{data?.vote?.length > 0 ? data?.vote?.length : '0'} upvotes</p>
+            <div className="col-4 col-sm-3 col-md-2 post-card-footer">
+              <p>{Number(data?.message?.vote) > 0 ? Number(data?.message?.vote) : '0'} upvotes</p>
             </div>
-            <div className="col-2 post-card-footer">
-              <Link to='/comment' state={propsData} >{data?.comments?.length > 0 ? data?.comments?.length : '0'} comments</Link>
+            <div className="col-4 col-sm-3 col-md-2 post-card-footer">
+              <Link to='/comment' state={data} >{data?.message?.comments?.length > 0 ? data?.message?.comments?.length : '0'} comments</Link>
             </div>
           </div>
         </div>

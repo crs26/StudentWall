@@ -1,5 +1,5 @@
 import React from 'react'
-import { Home } from './pages/Home/index';
+// import { Home } from './pages/Home/index';
 import { Post } from './pages/Post/index';
 import { Message } from './pages/Message/index';
 import { Comment } from './pages/Comment/index';
@@ -13,7 +13,7 @@ export const App = () => {
         <>
             <Navbar />
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Post />} />
                 <Route path="/post" element={<Post />} />
                 <Route path="/message" element={<Message />} />
                 <Route path="/comment" element={<Comment />} />

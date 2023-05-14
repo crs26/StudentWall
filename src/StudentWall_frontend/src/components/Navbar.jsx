@@ -3,9 +3,9 @@ import { Link, useMatch, useResolvedPath } from '../../../../node_modules/react-
 
 export const Navbar = () => {
 
-    function NavLink({ to, children, ...props}) {
+    function NavLink({ to, children, ...props }) {
         const resolvedPath = useResolvedPath(to)
-        const isActive = useMatch({ path: resolvedPath.pathname, end: true})
+        const isActive = useMatch({ path: resolvedPath.pathname, end: true })
         return (
             <li className={`nav-item  ${isActive ? "active" : ""}`}>
                 <Link to={to} {...props}>
@@ -16,15 +16,13 @@ export const Navbar = () => {
     }
 
     return (
-        <nav className="navbar navbar-expand-lg bg-dark.bg-gradient">
-            <div className="container-fluid">
-                <Link to="/">IC Freedom Wall</Link>
-                <div className="collapse navbar-collapse">
-                    <ul className="navbar-nav">
-                        <NavLink to="/post">Post</NavLink>
-                        <NavLink to="/message">Message</NavLink>
-                    </ul>
-                </div>
+        <nav className="navbar navbar-expand-lg">
+            <div className="container d-flex justify-content-between">
+                <Link to="/" className='nav-brand'>IC Freedom Wall</Link>
+                <ul className="navbar-nav nav-items">
+                    <NavLink to="/post">Post</NavLink>
+                    <NavLink to="/message">Message</NavLink>
+                </ul>
             </div>
         </nav>
     )

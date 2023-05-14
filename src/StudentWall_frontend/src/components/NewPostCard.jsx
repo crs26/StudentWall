@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
 
-export default function NewPostCard({ subject, body, edit, id, setEditPost }) {
+export default function NewPostCard({ subject, body, edit, id, setEditPost, update }) {
   const [post, setPost] = useState({
     subject: '',
     text: ''

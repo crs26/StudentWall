@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import identityReducer from './identitySlice'
-import commentSlice from './commentSlice'
+import commentSliceReducer from './commentSlice'
+import postSliceReducer from './postSlice'
 
 export default configureStore({
   reducer: {
     identity: identityReducer, 
-    post: commentSlice,
-    comment: commentSlice
+    post: postSliceReducer,
+    comment: commentSliceReducer
   },
 })

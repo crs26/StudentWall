@@ -29,6 +29,7 @@ export default function NewPostCard({ subject, body, edit, id, setEditPost }) {
     if (post?.text !== '' && post?.subject !== '') {
       backend.writeMessage(post?.subject, { "Text": post?.text }).then((result) => {
         setAlert({ ...alert, message: 'New post added!', status: true })
+        update()
       })
     }
     else {

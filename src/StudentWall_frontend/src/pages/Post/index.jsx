@@ -8,17 +8,21 @@ export const Post = () => {
   const [posts, setPosts] = useState([{}])
   const [editPost, setEditPost] = useState({});
   useEffect(() => {
+    update()
+  }, []);
+
+  const update = () => {
     backend.getAllMessagesRanked().then((posts) => {
       setPosts(posts)
     })
-  }, []);
+  }
 
   return (
     <div className="container justify-content-center">
-      <NewPostCard setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} />
+      <NewPostCard update={update} setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} />
       {
         posts?.map((post, id) => {
-          return <PostCard key={id} id={id} data={post} setEditPost={setEditPost} editPost={editPost} />
+          return <PostCard key={id} id={id} data={post} setEditPost={setEditPost} editPost={editPost} update={update} />
         })
       }
     </div>

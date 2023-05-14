@@ -11,7 +11,8 @@ export default function PostCard({
   comments,
   creator,
   title,
-  vote }) {
+  vote,
+  update }) {
 
   const [deleted, setDeleted] = useState(false);
 

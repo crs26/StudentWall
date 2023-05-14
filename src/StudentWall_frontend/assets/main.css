@@ -13,6 +13,8 @@ nav {
 }
 
 a {
+    font-size: 1rem;
+    color: #fff !important;
     text-decoration: none !important;
 }
 
@@ -62,19 +64,35 @@ p {
     background: #262D34;
 }
 
+.form-inputs {
+    margin: auto 0;
+    width: 80%;
+}
+
+.post-card input[type="text"] {
+    font-size: 1rem;
+    color: #fff;
+    background: #2C353D;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 0px 12px 12px;
+    transition: ease-in-out all 0.3s;
+}
+
 .post-card textarea {
+    display: block;
     margin: auto 0;
     color: #fff;
     font-size: 1rem;
     background: #2C353D;
     border: none;
     border-radius: 10px;
-    width: 80%;
     padding: 12px 0px 12px 12px;
     transition: ease-in-out all 0.3s;
 }
 
-.post-card textarea:focus {
+.post-card textarea:focus,
+.post-card input[type="text"]:focus {
     outline: none;
     box-shadow: 0 0 1px 2px #ad3f0c;
     transition: ease-in-out all 0.3s;
@@ -83,6 +101,7 @@ p {
 .primary-btn {
     font-size: 1.4rem;
     font-weight: 500;
+    height: 2.0em;
     padding: 0 1.6em;
     border: none;
     border-radius: 10px;
@@ -112,4 +131,22 @@ p {
     padding: 0.2em;
     font-size: 3.0rem;
     border-radius: 50%;
+    transition: ease-in-out all 0.3s;
+}
+
+.post-card svg:hover {
+    background-color: #e44106;
+    transition: ease-in-out all 0.3s;
+}
+
+.post-card-footer div a {
+    color: #C5D0E6;
+    cursor: pointer;
+    text-align: right;
+    transition: ease-in-out all 0.3s;
+}
+
+.post-card-footer a:hover {
+    color: #e2e8f3;
+    transition: ease-in-out all 0.3s;
 }

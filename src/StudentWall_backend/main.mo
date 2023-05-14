@@ -141,9 +141,9 @@ actor class StudentWall() {
   };
 
   // Comment functions
-  public func writeComment(t : Text, p : Principal, messageId : Nat) : async () {
+  public shared({caller}) func writeComment(t : Text, messageId : Nat) : async (Result.Result<(), Text>) {
     let s : Nat = commentHash.size();
-    let u : ?User = userHash.get(p);
+    let u : ?User = userHash.get(caller);
     switch(u) {
       case(?u) { 
         let m = messageHash.get(messageId);
@@ -152,14 +152,17 @@ actor class StudentWall() {
           case(?m) {  
             commentHash.put(comSize, {text = t; user = u});
             messageHash.put(messageId, _Message.addComment(m, comSize));
+            return #ok();
           };
           case(_) { 
             // return error invalid message id
+            return #err("Invalid message id");
           };
         };
       };
       case(_) { 
         // return error user not exist
+        return #err("Invalid user")
       };
     };
   };

@@ -12,10 +12,10 @@ export const identitySlice = createSlice({
             state.name = action
         },
         setPrincipal : (state, action) =>{
-            state.name = action
+            state.principal = action
         },
         setAuthenticated : (state, action) =>{
-            state.name = action
+            state.authenticated = action
         },
     },
 })

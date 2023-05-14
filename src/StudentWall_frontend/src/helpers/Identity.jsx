@@ -4,18 +4,18 @@ import { ImInfinite } from 'react-icons/im'
 
 const Login = () => {
   const [identity, setIdentity] = useState(null);
-
-  // useEffect(() => {
-  //   const storedIdentity = localStorage.getItem('identity');
-  //   if (storedIdentity) {
-  //     setIdentity(AuthClient.Identity.fromString(storedIdentity));
-  //   }
-  // }, []);
-
+  let authClient
+  AuthClient.create().then(e => {
+    authClient = e
+    if (e.isAuthenticated()){
+      setIdentity(e.getIdentity())
+    }
+  })
+  
   const handleLogin = async () => {
     try {
-      const authClient = await AuthClient.create();
       await authClient.login({
+        identityProvider: process.env.CUSTOM_PROVIDER | 'https://identity.icp0.app',
         onSuccess: () => {
           const identityString = authClient.getIdentity().toString();
           localStorage.setItem('identity', identityString);
@@ -39,6 +39,11 @@ const Login = () => {
       console.error('Error logging out:', error);
     }
   };
+
+  const test = () => {
+    console.log(authClient.isAuthenticated())
+    console.log(authClient.getIdentity().getPrincipal().toString())
+  }
 
   return (
     <div className='my-auto'>

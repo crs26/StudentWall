@@ -5,7 +5,7 @@ export default function NewPostCard() {
   const [post, setPost] = useState({});
 
   const createPost = async () => {
-
+    await backend.writeMessage(post?.subject, { "Text": post?.text })
   }
   useEffect(() => {
     console.log(post)
@@ -21,7 +21,7 @@ export default function NewPostCard() {
           }}
         ></textarea>
       </div>
-      <button className='primary-btn my-auto'>Create Post</button>
+      <button className='primary-btn my-auto' onClick={createPost}>Create Post</button>
     </div>
   )
 }

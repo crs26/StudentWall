@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
+import { ImInfinite } from 'react-icons/im'
 
 const Login = () => {
   const [identity, setIdentity] = useState(null);
 
-  useEffect(() => {
-    const storedIdentity = localStorage.getItem('identity');
-    if (storedIdentity) {
-      setIdentity(AuthClient.Identity.fromString(storedIdentity));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedIdentity = localStorage.getItem('identity');
+  //   if (storedIdentity) {
+  //     setIdentity(AuthClient.Identity.fromString(storedIdentity));
+  //   }
+  // }, []);
 
   const handleLogin = async () => {
     try {
@@ -40,9 +41,13 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className='my-auto'>
       {!identity ? (
-        <button onClick={handleLogin}>Login with Internet Identity</button>
+        <div className='post-card p-5'>
+          <button onClick={handleLogin} className='primary-btn py-4'>
+            <ImInfinite className='bg-transparent' />
+            Login with Internet Identity</button>
+        </div>
       ) : (
         <div>
           <p>Welcome, {identity.getPrincipal().toString()}!</p>

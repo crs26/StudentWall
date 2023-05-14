@@ -26,17 +26,27 @@ p {
 .nav-brand {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #ff571A;
+    color: #ff571A !important;
     transition: ease-in-out all 0.3s;
 }
 
 .nav-brand:hover {
-    color: #fff;
+    color: #fff !important;
     transition: ease-in-out all 0.3s;
 }
 
 .nav-items {
     gap: 2.5em;
+}
+
+.mobile-nav {
+    list-style: none;
+    display: none;
+    color: white;
+}
+
+.nav-items li {
+    margin: auto 0;
 }
 
 .nav-items a {
@@ -47,8 +57,12 @@ p {
 }
 
 .nav-items a:hover {
-    color: #ff571A;
+    color: #ff571A !important;
     transition: ease-in-out all 0.3s;
+}
+
+.identity-btn button {
+    font-size: calc(100% + 0.8vh);
 }
 
 .user-img {
@@ -149,4 +163,32 @@ p {
 .post-card-footer a:hover {
     color: #e2e8f3;
     transition: ease-in-out all 0.3s;
+}
+
+@media screen and (max-width: 991px) {
+    .nav-brand {
+        font-size: calc(100% + 1vh) !important;
+    }
+
+    .mobile-nav {
+        display: block;
+    }
+
+    .navbar-nav {
+        display: none !important;
+        text-align: center;
+    }
+
+    .identity-btn span {
+        display: none;
+    }
+
+    .show.navbar-nav {
+        display: unset !important;
+    }
+
+    .show.navbar-nav li,
+    .show.navbar-nav .identity-btn {
+        padding: 1.0em;
+    }
 }

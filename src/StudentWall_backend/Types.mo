@@ -16,7 +16,7 @@ module {
 
   public type Comment = {
     text : Text;
-    user : User;
+    creator : Principal;
   };
 
   public type Answer = (

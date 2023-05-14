@@ -145,26 +145,17 @@ actor class StudentWall() {
 
   // Comment functions
   public shared({caller}) func writeComment(t : Text, messageId : Nat) : async (Result.Result<(), Text>) {
-    let u : ?User = userHash.get(caller);
-    switch(u) {
-      case(?u) { 
-        let m = messageHash.get(messageId);
-        switch(m) {
-          case(?m) {  
-            commCount += 1;
-            commentHash.put(commCount, {text = t; user = u});
-            messageHash.put(messageId, _Message.addComment(m, commCount));
-            return #ok();
-          };
-          case(_) { 
-            // return error invalid message id
-            return #err("Invalid message id");
-          };
-        };
+    let m = messageHash.get(messageId);
+    switch(m) {
+      case(?m) {  
+        commCount += 1;
+        commentHash.put(commCount, {text = t; creator = caller});
+        messageHash.put(messageId, _Message.addComment(m, commCount));
+        return #ok();
       };
       case(_) { 
-        // return error user not exist
-        return #err("Invalid user or not logged in")
+        // return error invalid message id
+        return #err("Invalid message id");
       };
     };
   };

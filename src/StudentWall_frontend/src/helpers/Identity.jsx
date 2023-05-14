@@ -4,22 +4,31 @@ import { ImInfinite } from 'react-icons/im'
 
 const Login = () => {
   const [identity, setIdentity] = useState(null);
-  let authClient
-  AuthClient.create().then(e => {
-    authClient = e
-    if (e.isAuthenticated()){
-      setIdentity(e.getIdentity())
-    }
-  })
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  useEffect(() => {
+    AuthClient.create().then( async e => {
+      setIdentity(e)
+
+      let isAuthenticated = await e.isAuthenticated()
+      if (isAuthenticated){
+        console.log("authenticated")
+        setIsAuthenticated(true)
+      }
+    })
+    
+  }, [])
+  
   
   const handleLogin = async () => {
     try {
+      const authClient = await AuthClient.create();
+      console.log(authClient)
       await authClient.login({
-        identityProvider: process.env.CUSTOM_PROVIDER | 'https://identity.icp0.app',
-        onSuccess: () => {
-          const identityString = authClient.getIdentity().toString();
-          localStorage.setItem('identity', identityString);
-          setIdentity(authClient.getIdentity());
+        identityProvider: process.env.CUSTOM_PROVIDER || 'https://identity.icp0.app',
+        onSuccess: (e) => {
+          console.log("user logged in")
+          setIdentity(e)
+          setIsAuthenticated(true)
         },
       });
     } catch (error) {
@@ -30,13 +39,14 @@ const Login = () => {
   const handleLogout = async () => {
     try {
       if (identity) {
-        const authClient = await AuthClient.create();
-        await authClient.logout();
+        await identity.logout();
         localStorage.removeItem('identity');
+        setIsAuthenticated(false)
         setIdentity(null);
       }
     } catch (error) {
       console.error('Error logging out:', error);
+      console.log(authClient)
     }
   };
 
@@ -47,7 +57,7 @@ const Login = () => {
 
   return (
     <div className='my-auto'>
-      {!identity ? (
+      {!isAuthenticated ? (
         <div className='post-card p-5'>
           <button onClick={handleLogin} className='primary-btn py-4'>
             <ImInfinite className='bg-transparent' />
@@ -55,7 +65,6 @@ const Login = () => {
         </div>
       ) : (
         <div>
-          <p>Welcome, {identity.getPrincipal().toString()}!</p>
           <button onClick={handleLogout}>Logout</button>
         </div>
       )}

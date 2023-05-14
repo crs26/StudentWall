@@ -7,7 +7,7 @@ import { StudentWall_backend as backend } from "../../../../declarations/Student
 export const Post = () => {
   const [posts, setPosts] = useState([{}])
   useEffect(() => {
-    backend.getAllMessages().then((posts) => {
+    backend.getAllMessagesRanked().then((posts) => {
       setPosts(posts)
     })
   }, []);

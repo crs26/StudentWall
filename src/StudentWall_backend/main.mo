@@ -27,6 +27,8 @@ actor class StudentWall() {
 
   stable var enReg : Bool = true;
   stable var enMod : Bool = false;
+  stable var postCount : Nat = 0;
+  stable var commCount : Nat = 0;
 
   var messageHash = HashMap.HashMap<Nat, Message>(1, Nat.equal, Hash.hash);
   var commentHash = HashMap.HashMap<Nat, Comment>(1, Nat.equal, Hash.hash);
@@ -35,78 +37,76 @@ actor class StudentWall() {
 
   // Add a new message to the wall
   public shared ({ caller }) func writeMessage(t : Text, c : Content) : async Nat {
-    let len: Nat = messageHash.size();
-    messageHash.put(len, {text = t; content = c; creator = caller; vote = 0; comments = []});
-    return len;
+    postCount += 1;
+    messageHash.put(postCount, {text = t; content = c; creator = caller; vote = 0; comments = []});
+    return postCount;
   };
 
   // Get a specific message by ID
   public shared query func getMessage(messageId : Nat) : async Result.Result<Message, Text> {
-    let validId : Bool = Nat.greater(messageHash.size(), messageId);
-    if (validId) {
-      switch(messageHash.get(messageId)) {
-        case(?value) {
-          return #ok(value)
-        };
-        case(_) {
-          return #err("not implemented");
-        };
+    let msg : ?Message = messageHash.get(messageId);
+    switch(msg) {
+      case(?value) {
+        return #ok(value);
       };
-    } else {
-      return #err("not implemented");
-    }
+      case(_) {
+        return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
+      };
+    };
   };
 
   // Update the content for a specific message by ID
   public shared ({ caller }) func updateMessage(messageId : Nat, t : Text, c : Content) : async Result.Result<(), Text> {
-    let validId : Bool = Nat.greater(messageHash.size(), messageId);
-    if (validId) {
-      switch(messageHash.get(messageId)) {
-        case(?value) {
-          let owner : Bool = Principal.equal(caller, value.creator);
-          if (owner) {
-            messageHash.put(messageId, {text = t; content = c; creator = value.creator; vote = value.vote; comments = value.comments});
-          };
-          return #err("Only the owner can update the content")
+    let msg : ?Message = messageHash.remove(messageId);
+    switch(msg) {
+      case(?value) {  
+        let owner : Bool = Principal.equal(caller, value.creator);
+        if (owner) {
+          messageHash.put(messageId, {text = t; content = c; creator = value.creator; vote = value.vote; comments = value.comments});
+          return #ok();
         };
-        case(_) {
-          return #err("not implemented");
-        };
+        return #err("Only the owner can update the content");
+      };
+      case(_) { 
+        return #err("Message with id " # Nat.toText(messageId) #  "does not exist.")
       };
     };
-    return #err("not implemented");
   };
 
   // Delete a specific message by ID
   public shared ({ caller }) func deleteMessage(messageId : Nat) : async Result.Result<(), Text> {
-    let validId : Bool = Nat.greater(messageHash.size(), messageId);
-    if (not validId) return #err("not implemented");
-    return #ok(messageHash.delete(messageId));
+    let msg : ?Message = messageHash.remove(messageId);
+    switch(msg) {
+      case(?msg) {  
+        return #ok();
+      };
+      case(_) { 
+        return #err("Message with id " # Nat.toText(messageId) #  "does not exist.")
+      };
+    };
   };
 
   // Voting
   public func upVote(messageId : Nat) : async Result.Result<(), Text> {
-    let validId : Bool = Nat.greater(messageHash.size(), messageId);
-    if (not validId) return #err("not implemented");
-    switch(messageHash.get(messageId)) {
+    let msg : ?Message = messageHash.get(messageId);
+    switch(msg) {
       case(?value) {
         return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote + 1; comments = value.comments}));
       };
       case(_) {
-        return #err("not implemented");
+        return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
       };
     };
   };
 
   public func downVote(messageId : Nat) : async Result.Result<(), Text> {
-    let validId : Bool = Nat.greater(messageHash.size(), messageId);
-    if (not validId) return #err("not implemented");
-    switch(messageHash.get(messageId)) {
+    let msg : ?Message = messageHash.get(messageId);
+    switch(msg) {
       case(?value) {
         return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote - 1; comments = value.comments}));
       };
       case(_) {
-        return #err("not implemented");
+        return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
       };
     };
   };
@@ -117,6 +117,9 @@ actor class StudentWall() {
     for ((key, value) in messageHash.entries()) {
       arr.add({id = key; message = value});
     };
+    arr.sort(func (x : Response.Message, y : Response.Message) {
+      return Nat.compare(x.id, y.id);
+    });
     return Buffer.toArray(arr);
   };
 
@@ -143,16 +146,15 @@ actor class StudentWall() {
 
   // Comment functions
   public shared({caller}) func writeComment(t : Text, messageId : Nat) : async (Result.Result<(), Text>) {
-    let s : Nat = commentHash.size();
     let u : ?User = userHash.get(caller);
     switch(u) {
       case(?u) { 
         let m = messageHash.get(messageId);
-        let comSize = commentHash.size();
         switch(m) {
           case(?m) {  
-            commentHash.put(comSize, {text = t; user = u});
-            messageHash.put(messageId, _Message.addComment(m, comSize));
+            commCount += 1;
+            commentHash.put(commCount, {text = t; user = u});
+            messageHash.put(messageId, _Message.addComment(m, commCount));
             return #ok();
           };
           case(_) { 
@@ -163,7 +165,7 @@ actor class StudentWall() {
       };
       case(_) { 
         // return error user not exist
-        return #err("Invalid user")
+        return #err("Invalid user or not logged in")
       };
     };
   };

@@ -4,13 +4,14 @@ import { Link, useLocation } from "react-router-dom";
 import PostCard from '../../components/PostCard';
 import { StudentWall_backend as backend } from "../../../../declarations/StudentWall_backend";
 import NewComment from '../../components/NewComment';
+import NewPostCard from '../../components/NewPostCard';
 
 export const Comment = (props) => {
   const [comments, setComments] = useState();
+  const [editPost, setEditPost] = useState({});
   const location = useLocation();
   const data = location.state;
   const id = location.id;
-  console.log(data);
 
   useEffect(() => {
     backend.getComment(data?.id).then((comments) => {
@@ -20,7 +21,12 @@ export const Comment = (props) => {
 
   return (
     <div className="container justify-content-center" >
-      <PostCard data={data} />
+      {editPost?.edit ?
+        (
+          <NewPostCard setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} />
+        ) : ''
+      }
+      <PostCard id={id} data={data} setEditPost={setEditPost} editPost={editPost} />
       <NewComment postId={data?.id} />
       {comments?.ok?.map((comment, id) => {
         return (

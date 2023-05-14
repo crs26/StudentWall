@@ -56,16 +56,14 @@ const Login = () => {
   }
 
   return (
-    <div className='my-auto'>
+    <div className='col-4'>
       {!isAuthenticated ? (
-        <div className='post-card p-5'>
-          <button onClick={handleLogin} className='primary-btn py-4'>
+          <button onClick={handleLogin} className='primary-btn'>
             <ImInfinite className='bg-transparent' />
             Login with Internet Identity</button>
-        </div>
       ) : (
         <div>
-          <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleLogout} className='primary-btn'>Logout</button>
         </div>
       )}
     </div>

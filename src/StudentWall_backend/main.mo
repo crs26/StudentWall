@@ -1,4 +1,5 @@
 import Type "Types";
+import Admin "Admin";
 import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Array "mo:base/Array";
@@ -12,21 +13,29 @@ import Hash "mo:base/Hash";
 import Option "mo:base/Option";
 import Principal "mo:base/Principal";
 import Int "mo:base/Int";
+import _Message "Message";
+import Message "Message";
 
 actor class StudentWall() {
   type Message = Type.Message;
   type Content = Type.Content;
   type Survey = Type.Survey;
   type Answer = Type.Answer;
+  type User = Type.User;
+  type Comment = Type.Comment;
 
-  // var content : Content = {Image(null) };
-  // var message: Message = {content = content; creator = null};
+  stable var enReg : Bool = true;
+  stable var enMod : Bool = false;
+
   var messageHash = HashMap.HashMap<Nat, Message>(1, Nat.equal, Hash.hash);
+  var commentHash = HashMap.HashMap<Nat, Comment>(1, Nat.equal, Hash.hash);
+  var userHash = HashMap.HashMap<Principal, User>(1, Principal.equal, Principal.hash);
+  var admin = Buffer.Buffer<User>(1);
 
   // Add a new message to the wall
-  public shared ({ caller }) func writeMessage(c : Content) : async Nat {
+  public shared ({ caller }) func writeMessage(t : Text, c : Content) : async Nat {
     let len: Nat = messageHash.size();
-    messageHash.put(len, {content = c; creator = caller; vote = 0});
+    messageHash.put(len, {text = t; content = c; creator = caller; vote = 0; comments = []});
     return len;
   };
 
@@ -48,14 +57,14 @@ actor class StudentWall() {
   };
 
   // Update the content for a specific message by ID
-  public shared ({ caller }) func updateMessage(messageId : Nat, c : Content) : async Result.Result<(), Text> {
+  public shared ({ caller }) func updateMessage(messageId : Nat, t : Text, c : Content) : async Result.Result<(), Text> {
     let validId : Bool = Nat.greater(messageHash.size(), messageId);
     if (validId) {
       switch(messageHash.get(messageId)) {
         case(?value) {
           let owner : Bool = Principal.equal(caller, value.creator);
           if (owner) {
-            messageHash.put(messageId, {content = c; creator = value.creator; vote = value.vote});
+            messageHash.put(messageId, {text = t; content = c; creator = value.creator; vote = value.vote; comments = value.comments});
           };
           return #err("Only the owner can update the content")
         };
@@ -80,7 +89,7 @@ actor class StudentWall() {
     if (not validId) return #err("not implemented");
     switch(messageHash.get(messageId)) {
       case(?value) {
-        return #ok(messageHash.put(messageId, {content = value.content; creator = value.creator; vote = value.vote + 1}));
+        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote + 1; comments = value.comments}));
       };
       case(_) {
         return #err("not implemented");
@@ -93,7 +102,7 @@ actor class StudentWall() {
     if (not validId) return #err("not implemented");
     switch(messageHash.get(messageId)) {
       case(?value) {
-        return #ok(messageHash.put(messageId, {content = value.content; creator = value.creator; vote = value.vote - 1}));
+        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote - 1; comments = value.comments}));
       };
       case(_) {
         return #err("not implemented");
@@ -129,5 +138,78 @@ actor class StudentWall() {
 
     });
     return Buffer.toArray(arr);
+  };
+
+  // Comment functions
+  public func writeComment(t : Text, p : Principal, messageId : Nat) : async () {
+    let s : Nat = commentHash.size();
+    let u : ?User = userHash.get(p);
+    switch(u) {
+      case(?u) { 
+        let m = messageHash.get(messageId);
+        let comSize = commentHash.size();
+        switch(m) {
+          case(?m) {  
+            commentHash.put(comSize, {text = t; user = u});
+            messageHash.put(messageId, _Message.addComment(m, comSize));
+          };
+          case(_) { 
+            // return error invalid message id
+          };
+        };
+      };
+      case(_) { 
+        // return error user not exist
+      };
+    };
+  };
+
+  public func deleteComment(commentId : Nat, messageId : Nat) : async () {
+    let msg : ?Message = messageHash.get(messageId);
+    switch(msg) {
+      case(?msg) {  
+        messageHash.put(messageId, _Message.removeComment(msg, commentId));
+        ignore commentHash.remove(commentId);
+      };
+      case(_) { };
+    };
+  };
+
+  public query func getComment(messageId:Nat) : async Result.Result<[Comment], Text> {
+    let msg : ?Message = messageHash.get(messageId);
+    var commBuff = Buffer.Buffer<Comment>(1);
+    switch(msg) {
+      case(?msg) {  
+        let commArr : [Nat] = msg.comments;
+        for(item in commArr.vals()) {
+          let comment : ?Comment = commentHash.get(item);
+          switch(comment) {
+            case(?comment) {  
+              commBuff.add(comment); 
+            };
+            case(_) { 
+              // return error invalid comment id
+            };
+          };
+        };
+        return #ok(Buffer.toArray(commBuff));
+      };
+      case(_) { 
+        // return error invalid message id
+        return #err("Invalid message Id")
+      };
+    };
+  };
+
+  // User functions
+  public func addUser(n:Text, p:Principal, i:Blob) : async () {
+    let s = userHash.size();
+    userHash.put(p, {name = n ; allowMsg = true; image=i});
+  };
+
+
+  // Admin functions
+  public func adminEnReg(b:Bool) : async () {
+    enReg := b;
   };
 };

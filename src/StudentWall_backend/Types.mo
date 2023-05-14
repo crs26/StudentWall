@@ -7,9 +7,16 @@ module {
   };
 
   public type Message = {
+    text : Text;
     content : Content;
     vote : Int;
     creator : Principal;
+    comments : [Nat]
+  };
+
+  public type Comment = {
+    text : Text;
+    user : User;
   };
 
   public type Answer = (
@@ -20,5 +27,11 @@ module {
   public type Survey = {
     title : Text; // title describes the survey
     answers : [Answer]; // possible answers for the survey
+  };
+
+  public type User = {
+    name : Text;
+    image : Blob;
+    allowMsg : Bool;
   };
 };

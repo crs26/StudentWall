@@ -11,9 +11,6 @@ export default function NewComment({ postId, update }) {
     })
   }
 
-  useEffect(() => {
-    console.log(post)
-  }, [post]);
   return (
     <div className='d-md-flex post-card my-3'>
       <div className='d-flex w-100 justify-content-between'>

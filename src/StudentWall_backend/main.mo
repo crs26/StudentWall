@@ -112,7 +112,7 @@ actor class StudentWall() {
   };
 
   // Get all messages
-  public func getAllMessages() : async [Response.Message] {
+  public query func getAllMessages() : async [Response.Message] {
     var arr  = Buffer.Buffer<Response.Message>(1);
     for ((key, value) in messageHash.entries()) {
       arr.add({id = key; message = value});
@@ -132,14 +132,13 @@ actor class StudentWall() {
     };
   };
 
-  public func getAllMessagesRanked() : async [Response.Message] {
+  public query func getAllMessagesRanked() : async [Response.Message] {
     var arr  = Buffer.Buffer<Response.Message>(1);
     for ((key, value) in messageHash.entries()) {
       arr.add({id=key; message=value});
     };
     arr.sort(func (x : Response.Message, y : Response.Message) {
       return desc(x.message.vote, y.message.vote);
-
     });
     return Buffer.toArray(arr);
   };
@@ -203,6 +202,33 @@ actor class StudentWall() {
       case(_) { 
         // return error invalid message id
         return #err("Invalid message Id")
+      };
+    };
+  };
+
+  public query func getAllComment(messageId : Nat) : async Result.Result<[Response.Comment], Text> {
+    let msg : ?Message = messageHash.get(messageId);
+    switch(msg) {
+      case(?msg) {  
+        var commList = Buffer.Buffer<Response.Comment>(1);
+        for(item in msg.comments.vals()) {
+          let comm = commentHash.get(item);
+          switch(comm) {
+            case(?comm) {  
+              commList.add({id = item; comment = comm});
+            };
+            case(_) { 
+              // return #err("Comment with id " # Nat.toText(item) #  "does not exist.");
+            };
+          };
+        };
+        commList.sort(func (x : Response.Comment, y : Response.Comment) {
+          return Nat.compare(x.id, y.id);
+        });
+        return #ok(Buffer.toArray(commList))
+      };
+      case(_) { 
+        return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
       };
     };
   };

@@ -15,6 +15,7 @@ import Principal "mo:base/Principal";
 import Int "mo:base/Int";
 import _Message "Message";
 import Message "Message";
+import Response "Response";
 
 actor class StudentWall() {
   type Message = Type.Message;
@@ -111,10 +112,10 @@ actor class StudentWall() {
   };
 
   // Get all messages
-  public func getAllMessages() : async [Message] {
-    var arr  = Buffer.Buffer<Message>(1);
+  public func getAllMessages() : async [Response.Message] {
+    var arr  = Buffer.Buffer<Response.Message>(1);
     for ((key, value) in messageHash.entries()) {
-      arr.add(value);
+      arr.add({id = key; message = value});
     };
     return Buffer.toArray(arr);
   };
@@ -128,13 +129,13 @@ actor class StudentWall() {
     };
   };
 
-  public func getAllMessagesRanked() : async [Message] {
-    var arr  = Buffer.Buffer<Message>(1);
+  public func getAllMessagesRanked() : async [Response.Message] {
+    var arr  = Buffer.Buffer<Response.Message>(1);
     for ((key, value) in messageHash.entries()) {
-      arr.add(value);
+      arr.add({id=key; message=value});
     };
-    arr.sort(func (x : Message, y : Message) {
-      return desc(x.vote, y.vote);
+    arr.sort(func (x : Response.Message, y : Response.Message) {
+      return desc(x.message.vote, y.message.vote);
 
     });
     return Buffer.toArray(arr);

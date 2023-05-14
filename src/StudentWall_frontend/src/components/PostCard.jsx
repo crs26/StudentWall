@@ -9,7 +9,8 @@ export default function PostCard({
   comments,
   creator,
   title,
-  vote }) {
+  vote,
+  update }) {
 
   const [propsData, setPropsData] = useState(data);
 
@@ -26,9 +27,9 @@ export default function PostCard({
   }
 
   const deletePost = async (id) => {
-    console.log(
-      await backend.deleteMessage(id)
-    );
+    backend.deleteMessage(id).then(() => {
+      update()
+    })
   }
 
   return (

@@ -7,17 +7,21 @@ import { StudentWall_backend as backend } from "../../../../declarations/Student
 export const Post = () => {
   const [posts, setPosts] = useState([{}])
   useEffect(() => {
+    update()
+  }, []);
+
+  const update = () => {
     backend.getAllMessagesRanked().then((posts) => {
       setPosts(posts)
     })
-  }, []);
+  }
 
   return (
     <div className="container justify-content-center">
-      <NewPostCard />
+      <NewPostCard update={update}/>
       {
         posts?.map((post, id) => {
-          return <PostCard key={id} id={id} data={post} />
+          return <PostCard key={id} id={id} data={post} update={update} />
         })
       }
     </div>

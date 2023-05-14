@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
 
-export default function NewComment({ postId }) {
+export default function NewComment({ postId, update }) {
   const [post, setPost] = useState({});
+  const inText = useRef()
 
   const addComment = async () => {
-    console.log(await backend.writeComment(post?.text, postId))
+    backend.writeComment(inText.current.value, postId).then(() => {
+      update()
+    })
   }
 
   useEffect(() => {
@@ -20,9 +23,7 @@ export default function NewComment({ postId }) {
         <div className='col-11 d-grid form-inputs'>
           <textarea placeholder='What do you think?'
             className='ms-2 ms-lg-0 mx-md-2'
-            onChange={(e) => {
-              setPost({ ...post, text: e.target.value })
-            }}
+            ref={inText}
           ></textarea>
         </div>
       </div>

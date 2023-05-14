@@ -13,15 +13,18 @@ export const Comment = (props) => {
   console.log(data);
 
   useEffect(() => {
+    update()
+  }, [data?.id]);
+
+  const update = () => {
     backend.getComment(data?.id).then((comments) => {
       setComments(comments)
     })
-  }, [data?.id]);
+  }
 
   return (
     <div className="container justify-content-center" >
       <PostCard data={data} />
-      <NewComment postId={data?.id} />
       {comments?.ok?.map((comment, id) => {
         return (
           <div key={id} className='my-2 px-2 mx-1'>
@@ -38,6 +41,7 @@ export const Comment = (props) => {
           </div>
         )
       })}
+      <NewComment postId={data?.id} update={update}/>
     </div>
   )
 }

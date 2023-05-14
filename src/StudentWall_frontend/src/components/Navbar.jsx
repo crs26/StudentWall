@@ -1,9 +1,22 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useMatch, useResolvedPath } from '../../../../node_modules/react-router-dom/dist/index'
 import Identity from '../helpers/Identity'
+import { GiHamburgerMenu } from 'react-icons/gi'
 
 export const Navbar = () => {
+    const [showNav, setShowNav] = useState(false);
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 992) {
+                setShowNav(false);
+            }
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
     function NavLink({ to, children, ...props }) {
         const resolvedPath = useResolvedPath(to)
         const isActive = useMatch({ path: resolvedPath.pathname, end: true })
@@ -19,12 +32,17 @@ export const Navbar = () => {
     return (
         <nav className="navbar navbar-expand-lg">
             <div className="container d-flex justify-content-between">
-                <Link to="/" className='nav-brand col-4'>IC Freedom Wall</Link>
-                <ul className="navbar-nav nav-items col-4">
+                <Link to="/" className='nav-brand col-md-4'>IC Freedom Wall</Link>
+                <ul className="mobile-nav">
+                    <li>
+                        <GiHamburgerMenu onClick={() => { setShowNav(!showNav) }} />
+                    </li>
+                </ul>
+                <ul className={`${showNav ? 'col-12 show' : ''} navbar-nav nav-items my-auto justify-content-end`}>
                     <NavLink to="/post">Post</NavLink>
                     <NavLink to="/message">Message</NavLink>
+                    <Identity />
                 </ul>
-                <Identity />
             </div>
         </nav>
     )

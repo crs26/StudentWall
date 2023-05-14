@@ -10,24 +10,27 @@ export const Comment = (props) => {
   const [comments, setComments] = useState();
   const [editPost, setEditPost] = useState({});
   const location = useLocation();
-  const data = location.state;
+  const [data, setData] = useState(location.state)
   const id = location.id;
 
   useEffect(() => {
+    update()
+  }, [data?.id]);
+
+  const update = () => {
     backend.getComment(data?.id).then((comments) => {
       setComments(comments)
     })
-  }, [data?.id]);
+  }
 
   return (
     <div className="container justify-content-center" >
       {editPost?.edit ?
         (
-          <NewPostCard setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} />
+          <NewPostCard setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} update={update} setData={setData} />
         ) : ''
       }
       <PostCard id={id} data={data} setEditPost={setEditPost} editPost={editPost} />
-      <NewComment postId={data?.id} />
       {comments?.ok?.map((comment, id) => {
         return (
           <div key={id} className='my-2 px-2 mx-1'>
@@ -44,6 +47,7 @@ export const Comment = (props) => {
           </div>
         )
       })}
+      <NewComment postId={data?.id} update={update} />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
 
-export default function NewPostCard({ subject, body, edit, id, setEditPost, update }) {
+export default function NewPostCard({ subject, body, edit, id, setEditPost, update, setData }) {
   const [post, setPost] = useState({
     subject: '',
     text: ''
@@ -41,6 +41,7 @@ export default function NewPostCard({ subject, body, edit, id, setEditPost, upda
     if (subject !== '' && body !== '') {
       backend.updateMessage(id, post?.subject, { "Text": post?.text }).then((result) => {
         setAlert({ ...alert, message: 'Post, edited!', status: true })
+        update()
       })
     }
     else {

@@ -20,11 +20,11 @@ export default function PostCard({
   console.log(data.message?.creator.toString())
 
   const upVote = async (id) => {
-    console.log(await backend.upVote(id))
+    backend.upVote(id).then(() => update())
   }
 
   const downVote = async (id) => {
-    console.log(await backend.downVote(id))
+    backend.downVote(id).then(() => update())
   }
 
   const deletePost = async (id) => {

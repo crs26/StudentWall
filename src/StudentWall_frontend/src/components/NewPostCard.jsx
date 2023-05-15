@@ -70,8 +70,8 @@ export default function NewPostCard({ subject, body, edit, id, setEditPost, upda
       {
         !alert.status ?
           <><div className='d-flex w-100 gap-md-4 justify-content-between justify-content-md-start'>
-            <div className='col-1 my-auto d-flex'>
-              <img src='/user.png' className='user-img m-auto' />
+            <div className='col-1 d-flex justify-content-center mt-2'>
+              <img src='/user.png' className='user-img' />
             </div>
             <div className='col-10 col-md-10 d-grid form-inputs'>
               <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' onChange={(e) => setPost({ ...post, subject: e.target.value })} value={post?.subject} />
@@ -81,10 +81,12 @@ export default function NewPostCard({ subject, body, edit, id, setEditPost, upda
                   setPost({ ...post, text: e.target.value });
                 }}
               ></textarea>
+              <div className='mx-auto w-100 mt-2 d-flex justify-content-end'>
+                <button className='primary-btn mt-2 my-md-auto px-5' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
+              </div>
             </div>
-          </div><div className='mx-auto col-12 col-md-3 col-lg-2 d-flex'>
-              <button className='primary-btn mt-2 my-md-auto w-100 px-0' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
-            </div></>
+          </div>
+          </>
           : showAlert()
       }
     </div >

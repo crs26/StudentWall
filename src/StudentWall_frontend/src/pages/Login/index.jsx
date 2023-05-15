@@ -28,25 +28,25 @@ export const LoginPage = () => {
         .then((response) => response.blob())
         .then((blob) => {
           // Perform upload logic with the Blob object
-          const reader = new global.FileReader();
+          const reader = new global.FileReader()
           reader.onloadend = () => {
-            const arrayBuffer = reader.result;
-            const uint8Array = new Uint8Array(arrayBuffer);
-            console.log('Array value:', uint8Array);
+            const arrayBuffer = reader.result
+            const uint8Array = new Uint8Array(arrayBuffer)
+            console.log('Array value:', uint8Array)
             whoamiActor.addUser(userRef.current.value, principal, uint8Array).then((e) => {
               console.log()
             })
-          };
-          reader.readAsArrayBuffer(blob);
+          }
+          reader.readAsArrayBuffer(blob)
 
-          console.log(principal.toString());
-          console.log('Uploading blob:', blob.stream());
+          console.log(principal.toString())
+          console.log('Uploading blob:', blob.stream())
         })
         .catch((error) => {
-          console.error('Error converting to Blob:', error);
-        });
+          console.error('Error converting to Blob:', error)
+        })
     } else {
-      console.log('No file selected');
+      console.log('No file selected')
     }
     // whoamiActor.addUser().then((e) => {
     //   console.log()
@@ -63,9 +63,9 @@ export const LoginPage = () => {
       }
       reader.readAsDataURL(file)
     } else {
-      setSelectedFile(null);
-      setPreviewImage(null);
-      console.log('Invalid file size. Please select a file smaller than 1MB.');
+      setSelectedFile(null)
+      setPreviewImage(null)
+      console.log('Invalid file size. Please select a file smaller than 1MB.')
       toast('Image file is too large')
     }
   }

@@ -45,11 +45,19 @@ export default function PostCard ({ id }) {
   }
 
   const editPost = () => {
-    whoamiActor.updateMessage(id, postEdit?.text, { Text: postEdit?.content?.Text }).then((result) => {
-      getUpdatedMessage(id)
-      setShowModal(false)
-      toast('Post has been updated')
-    })
+    if (postEdit?.content?.Text) {
+      whoamiActor.updateMessage(id, postEdit?.text, { Text: postEdit?.content?.Text }).then((result) => {
+        getUpdatedMessage(id)
+        setShowModal(false)
+        toast('Post has been updated')
+      })
+    } else {
+      whoamiActor.updateMessage(id, postEdit?.text, { Image: postEdit?.content?.Image }).then((result) => {
+        getUpdatedMessage(id)
+        setShowModal(false)
+        toast('Post has been updated')
+      })
+    }
   }
 
   const getUpdatedMessage = async (id) => {

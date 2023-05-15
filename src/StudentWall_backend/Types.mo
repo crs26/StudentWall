@@ -9,6 +9,7 @@ module {
   public type Message = {
     text : Text;
     content : Content;
+    media : ?Blob;
     vote : Int;
     creator : Principal;
     comments : [Nat]

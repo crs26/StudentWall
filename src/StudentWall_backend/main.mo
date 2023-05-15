@@ -16,6 +16,7 @@ import Int "mo:base/Int";
 import _Message "Message";
 import Message "Message";
 import Response "Response";
+import Blob "mo:base/Blob";
 
 actor class StudentWall() {
   type Message = Type.Message;
@@ -40,9 +41,9 @@ actor class StudentWall() {
   var admin = Buffer.Buffer<User>(1);
 
   // Add a new message to the wall
-  public shared ({ caller }) func writeMessage(t : Text, c : Content) : async Nat {
+  public shared ({ caller }) func writeMessage(t : Text, c : Content, b : ?Blob) : async Nat {
     postCount += 1;
-    messageHash.put(postCount, {text = t; content = c; creator = caller; vote = 0; comments = []});
+    messageHash.put(postCount, {text = t; content = c; creator = caller; vote = 0; comments = []; media = b });
     return postCount;
   };
 
@@ -72,13 +73,13 @@ actor class StudentWall() {
   };
 
   // Update the content for a specific message by ID
-  public shared ({ caller }) func updateMessage(messageId : Nat, t : Text, c : Content) : async Result.Result<(), Text> {
+  public shared ({ caller }) func updateMessage(messageId : Nat, t : Text, c : Content, b : ?Blob) : async Result.Result<(), Text> {
     let msg : ?Message = messageHash.remove(messageId);
     switch(msg) {
       case(?value) {  
         let owner : Bool = Principal.equal(caller, value.creator);
         if (owner) {
-          messageHash.put(messageId, {text = t; content = c; creator = value.creator; vote = value.vote; comments = value.comments});
+          messageHash.put(messageId, {text = t; content = c; creator = value.creator; vote = value.vote; comments = value.comments; media = b});
           return #ok();
         };
         return #err("Only the owner can update the content");
@@ -107,7 +108,7 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
-        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote + 1; comments = value.comments}));
+        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote + 1; comments = value.comments; media = value.media}));
       };
       case(_) {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
@@ -119,7 +120,7 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
-        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote - 1; comments = value.comments}));
+        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote - 1; comments = value.comments; media = value.media}));
       };
       case(_) {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");

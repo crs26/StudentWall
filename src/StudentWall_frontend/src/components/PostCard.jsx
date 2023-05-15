@@ -35,7 +35,7 @@ export default function PostCard ({ id }) {
 
   const deletePost = async (id) => {
     backend.deleteMessage(id).then(result => {
-      setDeleted(true)
+      console.log(getUpdatedMessage(id))
       toast('Post has been deleted')
     })
 
@@ -115,67 +115,66 @@ export default function PostCard ({ id }) {
       </>
     )
   }
+
+  if (!post) return ''
+
   return (
     <>
       <div className='px-2 mx-1'>
         <div className='row post-card my-3 justify-content-center'>
-          {deleted
-            ? deleteAlert()
-            : <>
-              <div className='col-1'>
-                <div className='col my-auto'>
+          <div className='col-3 col-md-1'>
+            <div className='col my-auto'>
+              <div className='row'>
+                <img src='/user.png' className='user-img my-auto' />
+              </div>
+              <p>{shortPrincipal(principal?.toString())}</p>
+            </div>
+          </div>
+          <div className='col-12 col-md-11'>
+            <div className='row'>
+              <div className='col-12 col-md-5 my-auto'>
+                <div className='row px-md-5'>
+                  <h5>{post?.text}</h5>
+                  <p>
+                    {post?.content?.Text}
+                  </p>
+                </div>
+              </div>
+              <div className='row text-white d-flex justify-content-end'>
+                <div className='col-4'>
                   <div className='row'>
-                    <img src='/user.png' className='user-img my-auto' />
+                    <div className='col-5 text-center post-card-footer'>
+                      <p>{Number(post?.vote) > 0 ? Number(post?.vote) : '0'} votes</p>
+                    </div>
+                    <div className='col-5 text-center post-card-footer'>
+                      <Link to={`/comment/${id}`} state={post}>{post?.comments?.length > 0 ? post?.comments?.length : '0'} comments</Link>
+                    </div>
                   </div>
-                  <p>{shortPrincipal(principal?.toString())}</p>
                 </div>
-              </div>
-              <div className='col-11'>
-                <div className='row'>
-                  <div className='col-5 col-md-8 col-lg-9 my-auto'>
-                    <div className='row d-flex'>
-                      <div className='post my-auto'>
-                        <h5>{post?.text}</h5>
-                        <p>
-                          {post?.content?.Text}
-                        </p>
-                      </div>
-                    </div>
-                    <div className='row'>
-                      <div className='col-6 text-center post-card-footer'>
-                        <p>{Number(post?.vote) > 0 ? Number(post?.vote) : '0'} upvotes</p>
-                      </div>
-                      <div className='col-6 text-center post-card-footer'>
-                        <Link to={`/comment/${id}`} state={post}>{post?.comments?.length > 0 ? post?.comments?.length : '0'} comments</Link>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='col-6 col-md-3 d-flex justify-content-between my-auto text-white'>
-                    <div className='row d-flex my-auto'>
-                      <div className='col-6 d-flex justify-content-center'>
-                        <BiUpvote onClick={() => Number(upVote(id))} />
-                      </div>
-                      <div className='col-6 d-flex justify-content-center'>
-                        <BiDownvote onClick={() => Number(downVote(id))} />
-                      </div>
-                    </div>
-                    <div className={`row d-flex mt-2 ${post?.creator.toString() == principal?.toString() ? 'd-block' : 'd-none'}`}>
-                      <div className='col-6 d-flex justify-content-center'>
-                        <BiPencil onClick={() => {
-                          updatePost()
-                          setShowModal(true)
-                        }}
-                        />
-                      </div>
-                      <div className='col-6 d-flex justify-content-center'>
-                        <BiTrash onClick={() => Number(deletePost(id))} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className='row justify-content-end px-0' />
+
+                <div className={`col-1 ${post?.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
+                  <BiPencil onClick={() => {
+                    updatePost()
+                    setShowModal(true)
+                  }}
+                  />
                 </div>
+
+                <div className={`col-1 ${post?.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
+                  <BiTrash onClick={() => Number(deletePost(id))} />
+                </div>
+                <div className='col-1 '>
+                  <BiUpvote onClick={() => Number(upVote(id))} />
+                </div>
+
+                <div className='col-1 '>
+                  <BiDownvote onClick={() => Number(downVote(id))} />
+                </div>
+
               </div>
-              </>}
+              <div className='row justify-content-end px-0' />
+            </div>
+          </div>
         </div>
       </div>
       {renderEditModal()}

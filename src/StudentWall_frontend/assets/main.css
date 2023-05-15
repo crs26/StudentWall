@@ -75,7 +75,7 @@ p {
 
 .user-img {
     width: 4.0em;
-    height: 4.0em;
+    height: auto;
     border-radius: 50%;
 }
 

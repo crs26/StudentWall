@@ -204,3 +204,11 @@ p {
         padding: 1.0em;
     }
 }
+
+.modal.fade .modal-dialog {
+    max-width: 80%;
+}
+
+.modal-content {
+    background-color: #1e252b !important;
+}

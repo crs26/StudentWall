@@ -132,7 +132,7 @@ export default function PostCard ({ id }) {
           </div>
           <div className='col-12 col-md-11'>
             <div className='row'>
-              <div className='col-12 col-md-5 my-auto'>
+              <div className='col-12 my-auto'>
                 <div className='row px-md-5'>
                   <h5>{post?.text}</h5>
                   <p>
@@ -140,6 +140,7 @@ export default function PostCard ({ id }) {
                   </p>
                 </div>
               </div>
+              <hr className='text-light' />
               <div className='row text-white d-flex justify-content-end'>
                 <div className='col-4'>
                   <div className='row'>

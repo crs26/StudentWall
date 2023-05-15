@@ -165,10 +165,13 @@ p {
     transition: ease-in-out all 0.3s;
 }
 
-.post-card-footer div a {
-    color: #C5D0E6;
+.post-card-footer a,
+.post-card-footer p {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1.7em 0 1em 0 !important;
+    color: #C5D0E6 !important;
     cursor: pointer;
-    text-align: right;
     transition: ease-in-out all 0.3s;
 }
 

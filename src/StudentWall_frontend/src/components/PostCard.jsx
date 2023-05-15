@@ -75,10 +75,10 @@ export default function PostCard({
               </div>
             </div>
             <div className="row justify-content-end px-0">
-              <div className="col-4 col-sm-3 col-md-2 post-card-footer">
+              <div className="col-4 col-sm-3 col-md-2 post-card-footer px-0">
                 <p>{Number(data?.message?.vote) > 0 ? Number(data?.message?.vote) : '0'} upvotes</p>
               </div>
-              <div className="col-4 col-sm-3 col-md-2 post-card-footer">
+              <div className="col-4 col-sm-3 col-md-2 post-card-footer px-0">
                 <Link to='/comment' state={data} >{data?.message?.comments?.length > 0 ? data?.message?.comments?.length : '0'} comments</Link>
               </div>
             </div>

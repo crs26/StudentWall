@@ -30,8 +30,12 @@ actor class StudentWall() {
   stable var postCount : Nat = 0;
   stable var commCount : Nat = 0;
 
-  var messageHash = HashMap.HashMap<Nat, Message>(1, Nat.equal, Hash.hash);
-  var commentHash = HashMap.HashMap<Nat, Comment>(1, Nat.equal, Hash.hash);
+  func _natHash(n : Nat) : (Nat32) {
+    Text.hash(Nat.toText(n));
+  };
+
+  var messageHash = HashMap.HashMap<Nat, Message>(1, Nat.equal, _natHash);
+  var commentHash = HashMap.HashMap<Nat, Comment>(1, Nat.equal, _natHash);
   var userHash = HashMap.HashMap<Principal, User>(1, Principal.equal, Principal.hash);
   var admin = Buffer.Buffer<User>(1);
 
@@ -58,7 +62,7 @@ actor class StudentWall() {
   // Get user messages
   public shared ({caller}) func getUserMessages() : async Result.Result<[Message], Text>{
     let buff = Buffer.Buffer<Message>(1);
-    let t = HashMap.mapFilter<Nat, Message, Message>(messageHash, Nat.equal, Hash.hash, func (k, v) {
+    let t = HashMap.mapFilter<Nat, Message, Message>(messageHash, Nat.equal, _natHash, func (k, v) {
       if(Principal.equal(v.creator, caller)){
         buff.add(v);
         return ?v

@@ -1,13 +1,12 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { HashRouter } from "react-router-dom"
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { HashRouter } from 'react-router-dom'
 import store from './app/store'
 import { Provider } from 'react-redux'
-import { App } from "./App";
-import { AuthProvider } from "./helpers/use-auth-client";
+import { App } from './App'
+import { AuthProvider } from './helpers/use-auth-client'
 
-
-ReactDOM.createRoot(document.getElementById("app")).render(
+ReactDOM.createRoot(document.getElementById('app')).render(
   <React.StrictMode>
     <HashRouter>
       <Provider store={store}>
@@ -17,4 +16,4 @@ ReactDOM.createRoot(document.getElementById("app")).render(
       </Provider>
     </HashRouter>
   </React.StrictMode>
-);
+)

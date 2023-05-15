@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
-import {toast} from 'react-toastify'
+import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend'
+import { toast } from 'react-toastify'
 
-export default function NewComment({ postId, update }) {
-  const [post, setPost] = useState({});
+export default function NewComment ({ postId, update }) {
+  const [post, setPost] = useState({})
   const inText = useRef()
 
   const addComment = async () => {
     backend.writeComment(inText.current.value, postId).then(() => {
       update()
-      toast("Comment added");
+      toast('Comment added')
     })
   }
 
@@ -20,10 +20,11 @@ export default function NewComment({ postId, update }) {
           <img src='/user.png' className='user-img m-auto' />
         </div>
         <div className='col-11 d-grid form-inputs'>
-          <textarea placeholder='What do you think?'
+          <textarea
+            placeholder='What do you think?'
             className='ms-2 ms-lg-0 mx-md-2'
             ref={inText}
-          ></textarea>
+          />
         </div>
       </div>
       <div className='mx-auto col-12 col-md-3 col-lg-2 d-flex'>

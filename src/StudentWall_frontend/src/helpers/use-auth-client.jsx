@@ -1,8 +1,8 @@
-import { AuthClient } from "@dfinity/auth-client";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { canisterId, createActor } from "../../../declarations/StudentWall_backend";
+import { AuthClient } from '@dfinity/auth-client'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { canisterId, createActor } from '../../../declarations/StudentWall_backend'
 
-const AuthContext = createContext();
+const AuthContext = createContext()
 
 const defaultOptions = {
   /**
@@ -11,19 +11,19 @@ const defaultOptions = {
   createOptions: {
     idleOptions: {
       // Set to true if you do not want idle functionality
-      disableIdle: true,
-    },
+      disableIdle: true
+    }
   },
   /**
    * @type {import("@dfinity/auth-client").AuthClientLoginOptions}
    */
   loginOptions: {
     identityProvider:
-      process.env.DFX_NETWORK === "ic" || !process.env.CUSTOM_PROVIDER
-        ? "https://identity.ic0.app/#authorize"
-        : `http://localhost:4943?canisterId=${process.env.CUSTOM_PROVIDER}#authorize`,
-  },
-};
+      process.env.DFX_NETWORK === 'ic' || !process.env.CUSTOM_PROVIDER
+        ? 'https://identity.ic0.app/#authorize'
+        : `http://localhost:4943?canisterId=${process.env.CUSTOM_PROVIDER}#authorize`
+  }
+}
 
 /**
  *
@@ -33,55 +33,55 @@ const defaultOptions = {
  * @returns
  */
 export const useAuthClient = (options = defaultOptions) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authClient, setAuthClient] = useState(null);
-  const [identity, setIdentity] = useState(null);
-  const [principal, setPrincipal] = useState(null);
-  const [whoamiActor, setWhoamiActor] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [authClient, setAuthClient] = useState(null)
+  const [identity, setIdentity] = useState(null)
+  const [principal, setPrincipal] = useState(null)
+  const [whoamiActor, setWhoamiActor] = useState(null)
 
   useEffect(() => {
     // Initialize AuthClient
     AuthClient.create(options.createOptions).then(async (client) => {
-      updateClient(client);
-    });
-  }, []);
+      updateClient(client)
+    })
+  }, [])
 
   const login = () => {
     authClient.login({
       ...options.loginOptions,
       onSuccess: () => {
-        updateClient(authClient);
-      },
-    });
-  };
+        updateClient(authClient)
+      }
+    })
+  }
 
-  async function updateClient(client) {
-    console.log("updateClient");
-    const isAuthenticated = await client.isAuthenticated();
-    setIsAuthenticated(isAuthenticated);
+  async function updateClient (client) {
+    console.log('updateClient')
+    const isAuthenticated = await client.isAuthenticated()
+    setIsAuthenticated(isAuthenticated)
 
-    const identity = client.getIdentity();
-    setIdentity(identity);
+    const identity = client.getIdentity()
+    setIdentity(identity)
 
-    const principal = identity.getPrincipal();
-    setPrincipal(principal);
+    const principal = identity.getPrincipal()
+    setPrincipal(principal)
 
-    setAuthClient(client);
+    setAuthClient(client)
 
     const actor = createActor(canisterId, {
       agentOptions: {
-        identity,
-      },
-    });
+        identity
+      }
+    })
 
-    console.log(actor);
+    console.log(actor)
 
-    setWhoamiActor(actor);
+    setWhoamiActor(actor)
   }
 
-  async function logout() {
-    await authClient?.logout();
-    await updateClient(authClient);
+  async function logout () {
+    await authClient?.logout()
+    await updateClient(authClient)
   }
 
   return {
@@ -91,17 +91,17 @@ export const useAuthClient = (options = defaultOptions) => {
     authClient,
     identity,
     principal,
-    whoamiActor,
-  };
-};
+    whoamiActor
+  }
+}
 
 /**
  * @type {React.FC}
  */
 export const AuthProvider = ({ children }) => {
-  const auth = useAuthClient();
+  const auth = useAuthClient()
 
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
-};
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
+}
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext)

@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from "../helpers/use-auth-client";
+import { useAuth } from '../helpers/use-auth-client'
 
-
-export default function NewPostCard({ subject, body, edit, id, setEditPost, update, setData }) {
-  const { whoamiActor} = useAuth();
+export default function NewPostCard ({ subject, body, edit, id, setEditPost, update, setData }) {
+  const { whoamiActor } = useAuth()
 
   const [post, setPost] = useState({
     subject: '',
     text: ''
-  });
+  })
   const [alert, setAlert] = useState({
     message: '',
-    status: false,
-  });
+    status: false
+  })
 
   useEffect(() => {
-    setPost({ ...post, subject: subject, text: body })
-  }, [edit]);
+    setPost({ ...post, subject, text: body })
+  }, [edit])
 
   useEffect(() => {
     if (alert.status) {
@@ -24,30 +23,28 @@ export default function NewPostCard({ subject, body, edit, id, setEditPost, upda
         setAlert(false)
         setPost({ subject: '', text: '' })
         setEditPost({})
-      }, 2000);
+      }, 2000)
     }
-  }, [alert.status]);
+  }, [alert.status])
 
   const createPost = () => {
     if (post?.text !== '' && post?.subject !== '') {
-      whoamiActor.writeMessage(post?.subject, { "Text": post?.text }).then((result) => {
+      whoamiActor.writeMessage(post?.subject, { Text: post?.text }).then((result) => {
         setAlert({ ...alert, message: 'New post added!', status: true })
         update()
       })
-    }
-    else {
+    } else {
       setAlert({ ...alert, message: 'Cannot add an empty post!', status: false })
     }
   }
 
   const updatePost = () => {
     if (subject !== '' && body !== '') {
-      whoamiActor.updateMessage(id, post?.subject, { "Text": post?.text }).then((result) => {
+      whoamiActor.updateMessage(id, post?.subject, { Text: post?.text }).then((result) => {
         setAlert({ ...alert, message: 'Post, edited!', status: true })
         update()
       })
-    }
-    else {
+    } else {
       setAlert({ ...alert, message: 'Cannot add an empty post!', status: false })
     }
   }
@@ -55,8 +52,7 @@ export default function NewPostCard({ subject, body, edit, id, setEditPost, upda
   const handlePost = () => {
     if (!edit) {
       createPost()
-    }
-    else if (edit) {
+    } else if (edit) {
       updatePost()
     }
   }
@@ -71,25 +67,27 @@ export default function NewPostCard({ subject, body, edit, id, setEditPost, upda
 
     <div className='d-md-flex post-card my-3'>
       {
-        !alert.status ?
-          <><div className='d-flex w-100 gap-md-4 justify-content-between justify-content-md-start'>
+        !alert.status
+          ? <><div className='d-flex w-100 gap-md-4 justify-content-between justify-content-md-start'>
             <div className='col-1 my-auto d-flex'>
               <img src='/user.png' className='user-img m-auto' />
             </div>
             <div className='col-10 col-md-10 d-grid form-inputs'>
               <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' onChange={(e) => setPost({ ...post, subject: e.target.value })} value={post?.subject} />
-              <textarea placeholder='Share something on your mind'
+              <textarea
+                placeholder='Share something on your mind'
                 value={post?.text}
                 onChange={(e) => {
-                  setPost({ ...post, text: e.target.value });
+                  setPost({ ...post, text: e.target.value })
                 }}
-              ></textarea>
+              />
             </div>
-          </div><div className='mx-auto col-12 col-md-3 col-lg-2 d-flex'>
-              <button className='primary-btn mt-2 my-md-auto w-100 px-0' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
-            </div></>
+              </div><div className='mx-auto col-12 col-md-3 col-lg-2 d-flex'>
+            <button className='primary-btn mt-2 my-md-auto w-100 px-0' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
+                </div>
+            </>
           : showAlert()
       }
-    </div >
+    </div>
   )
 }

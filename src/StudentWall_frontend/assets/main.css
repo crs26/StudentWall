@@ -12,6 +12,14 @@ nav {
     background-color: #262D34;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5 {
+    color: #fff !important;
+}
+
 a {
     font-size: 1rem;
     color: #fff !important;
@@ -20,7 +28,7 @@ a {
 
 p {
     font-size: 1rem;
-    color: #fff;
+    color: #bbb7b7;
 }
 
 .nav-brand {
@@ -110,6 +118,10 @@ p {
     outline: none;
     box-shadow: 0 0 1px 2px #ad3f0c;
     transition: ease-in-out all 0.3s;
+}
+
+.alert-text {
+    color: #FF6934 !important;
 }
 
 .primary-btn {

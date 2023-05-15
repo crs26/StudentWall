@@ -17,7 +17,7 @@ export const Navbar = () => {
       window.removeEventListener('resize', handleResize)
     }
   }, [])
-  function NavLink ({ to, children, ...props }) {
+  function NavLink({ to, children, ...props }) {
     const resolvedPath = useResolvedPath(to)
     const isActive = useMatch({ path: resolvedPath.pathname, end: true })
     return (
@@ -32,7 +32,12 @@ export const Navbar = () => {
   return (
     <nav className='navbar navbar-expand-lg'>
       <div className='container d-flex justify-content-between'>
-        <Link to='/' className='nav-brand col-md-4'>IC Freedom Wall</Link>
+        <Link to='/' className='nav-brand col-md-4 d-flex'>
+          <img src='/logo.png' className='img-fluid nav-logo' />
+          <span>
+            IC Freedom Wall
+          </span>
+        </Link>
         <ul className='mobile-nav'>
           <li>
             <GiHamburgerMenu onClick={() => { setShowNav(!showNav) }} />

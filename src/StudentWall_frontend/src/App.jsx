@@ -13,7 +13,7 @@ export const App = () => {
   return (
     <>
       <Navbar />
-      <ToastContainer theme='dark' />
+      <ToastContainer theme='dark' position='bottom-right' />
       <Routes>
         <Route path='/' element={<Post />} />
         <Route path='/post' element={<Post />} />

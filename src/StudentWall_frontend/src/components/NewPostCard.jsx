@@ -78,8 +78,8 @@ export default function NewPostCard ({ subject, body, edit, id, setEditPost, upd
               setPost({ ...post, text: e.target.value })
             }}
           />
-          <div className='mx-auto col-12 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
-            <button className='primary-btn mt-2 my-md-auto' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
+          <div className='mx-auto col-12 col-md-12 col-lg-2 justify-content-end mt-2 d-flex w-100'>
+            <button className='primary-btn create-post-btn my-md-auto' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
           </div>
         </div>
       </div>

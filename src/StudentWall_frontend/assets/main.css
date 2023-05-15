@@ -31,8 +31,12 @@ p {
     color: #bbb7b7;
 }
 
+.nav-logo {
+    width: 1.3em;
+}
+
 .nav-brand {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: bold;
     color: #ff571A !important;
     transition: ease-in-out all 0.3s;
@@ -99,6 +103,10 @@ p {
     border-radius: 10px;
     padding: 12px 0px 12px 12px;
     transition: ease-in-out all 0.3s;
+}
+
+.create-post-btn {
+    font-size: calc(100% + 1vh) !important;
 }
 
 .post-card textarea {
@@ -189,7 +197,25 @@ p {
     transition: ease-in-out all 0.3s;
 }
 
+@media screen and (max-width: 769px) {
+    .create-post-btn {
+        width: 100% !important;
+    }
+
+    .nav-logo {
+        width: 2.0em;
+    }
+
+    .mobile-nav {
+        font-size: 1.2rem;
+    }
+}
+
 @media screen and (max-width: 991px) {
+    .nav-brand span {
+        display: none;
+    }
+
     .nav-brand {
         font-size: calc(100% + 1vh) !important;
     }

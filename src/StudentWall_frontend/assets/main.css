@@ -124,7 +124,8 @@ p {
     color: #FF6934 !important;
 }
 
-.primary-btn {
+.primary-btn,
+.primary-btn-danger {
     font-size: 1.4rem;
     font-weight: 500;
     height: 2.0em;
@@ -134,6 +135,14 @@ p {
     color: #fff;
     background: #FF6934;
     transition: ease-in-out all 0.3s;
+}
+
+.primary-btn-danger {
+    background-color: #bd2d02 !important;
+}
+
+.primary-btn-danger:hover {
+    background-color: #fc6f44 !important;
 }
 
 .primary-btn:hover {
@@ -169,7 +178,7 @@ p {
 .post-card-footer p {
     display: flex;
     justify-content: flex-end;
-    margin: 1.7em 0 1em 0 !important;
+    margin: auto 0;
     color: #C5D0E6 !important;
     cursor: pointer;
     transition: ease-in-out all 0.3s;
@@ -216,7 +225,16 @@ p {
     background-color: #1e252b !important;
 }
 
-.Toastify__toast-body > div:last-child {
+/* Toastify custom properties */
+.Toastify__progress-bar-theme--dark {
+    background: #ff571A !important;
+}
+
+.Toastify__toast-theme--dark {
+    background: #272727;
+}
+
+.Toastify__toast-body>div:last-child {
     font-size: large;
 }
 

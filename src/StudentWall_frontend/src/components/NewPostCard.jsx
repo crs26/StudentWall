@@ -129,7 +129,7 @@ export default function NewPostCard ({ subject, body, edit, id, setEditPost, upd
               <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
             </div>
             <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
-              <button className='primary-btn mt-2 my-md-auto' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
+              <button className='primary-btn create-post-btn my-md-auto' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
             </div>
           </div>
         </div>

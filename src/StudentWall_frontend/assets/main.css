@@ -31,8 +31,16 @@ p {
     color: #bbb7b7;
 }
 
+.text-main {
+    color: #ff571A !important;
+}
+
+.nav-logo {
+    width: 1.3em;
+}
+
 .nav-brand {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: bold;
     color: #ff571A !important;
     transition: ease-in-out all 0.3s;
@@ -91,6 +99,15 @@ p {
     width: 80%;
 }
 
+.username-reg {
+    font-size: 1rem;
+    color: #fff;
+    background: #2C353D;
+    padding: 0.5em 1.0em;
+    border-radius: 10px;
+    border: none;
+}
+
 .post-card input[type="text"] {
     font-size: 1rem;
     color: #fff;
@@ -99,6 +116,10 @@ p {
     border-radius: 10px;
     padding: 12px 0px 12px 12px;
     transition: ease-in-out all 0.3s;
+}
+
+.create-post-btn {
+    font-size: calc(100% + 1vh) !important;
 }
 
 .post-card textarea {
@@ -114,7 +135,9 @@ p {
 }
 
 .post-card textarea:focus,
-.post-card input[type="text"]:focus {
+.post-card input[type="text"]:focus,
+.username-reg:focus
+ {
     outline: none;
     box-shadow: 0 0 1px 2px #ad3f0c;
     transition: ease-in-out all 0.3s;
@@ -125,7 +148,8 @@ p {
 }
 
 .primary-btn,
-.primary-btn-danger {
+.primary-btn-danger,
+.secondary-btn {
     font-size: 1.4rem;
     font-weight: 500;
     height: 2.0em;
@@ -148,6 +172,10 @@ p {
 .primary-btn:hover {
     background-color: #e44106;
     transition: ease-in-out all 0.3s;
+}
+
+.secondary-btn {
+    background-color: #bd2d02 !important;
 }
 
 .post-card .post {
@@ -189,7 +217,25 @@ p {
     transition: ease-in-out all 0.3s;
 }
 
+@media screen and (max-width: 769px) {
+    .create-post-btn {
+        width: 100% !important;
+    }
+
+    .nav-logo {
+        width: 2.0em;
+    }
+
+    .mobile-nav {
+        font-size: 1.2rem;
+    }
+}
+
 @media screen and (max-width: 991px) {
+    .nav-brand span {
+        display: none;
+    }
+
     .nav-brand {
         font-size: calc(100% + 1vh) !important;
     }

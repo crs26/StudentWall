@@ -52,11 +52,11 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className='row d-flex justify-content-center align-items-center' style={{ height: '90vh', width: '100vw' }}>
-      <div className='col-4'>
+    <div className='row d-flex justify-content-center align-items-center m-0' style={{ height: '90vh', width: '100vw' }}>
+      <div className='col-10 col-md-8 col-xl-4'>
         <div className='card bg-dark'>
           <div className='card-header'>
-            <h3 className='text-light text-center'>Login with Internet Identity</h3>
+            <h3 className='text-center text-main'>Login with Internet Identity</h3>
           </div>
           <div className='card-body'>
             <div className='row d-flex justify-content-center'>
@@ -70,14 +70,14 @@ export const LoginPage = () => {
                     style={{ maxWidth: '100%', marginTop: '10px' }}
                   />
                 )}
-                <div className='input-group mb-3'>
-                  <input type='text' className='form-control' placeholder='Username' ref={userRef} />
-                  <div className='col-6 input-group-prepend'>
-                    <label htmlFor='file-input' className='btn btn-primary'>
+                <div className='input-group mb-3 d-flex'>
+                  <input type='text' className='rounded my-1 username-reg col-12' placeholder='Username' ref={userRef} />
+                  <div className='col-12 input-group-prepend'>
+                    <label htmlFor='file-input' className='btn btn-primary w-50 col-md-6'>
                       Image
                     </label>
                     <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
-                    <button className='col-6 btn btn-primary' onClick={handleRegister}>Register</button>
+                    <button className='col-6 btn btn-primary w-50 col-md-6' disabled={!isAuthenticated} onClick={handleRegister}>Register</button>
                   </div>
                 </div>
               </div>
@@ -87,7 +87,7 @@ export const LoginPage = () => {
             </div>
           </div>
           <div className='card-footer'>
-            <p className='text-center'>Motoko Bootcamp @ 2023</p>
+            <p className='text-center my-auto'>Motoko Bootcamp @ 2023</p>
           </div>
         </div>
       </div>

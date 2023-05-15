@@ -7,6 +7,7 @@ import { Route, Routes } from '../../../node_modules/react-router-dom/dist/index
 import { Navbar } from './components/Navbar'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { LoginPage } from './pages/Login/index'
 
 export const App = () => {
   return (
@@ -18,6 +19,7 @@ export const App = () => {
         <Route path='/post' element={<Post />} />
         <Route path='/message' element={<Message />} />
         <Route path='/comment/:id' element={<Comment />} />
+        <Route path='/login' element={<LoginPage />} />
       </Routes>
     </>
   )

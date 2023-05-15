@@ -241,9 +241,39 @@ actor class StudentWall() {
   };
 
   // User functions
-  public func addUser(n:Text, p:Principal, i:Blob) : async () {
+  public func addUser(n:Text, p:Principal, i:Blob) : async (Result.Result<(), Text>) {
+    if (not enReg) return #err("Registration is disabled");
+    if (Principal.isAnonymous(p)) return #err("Anonymous user is not allowed to register");
     let s = userHash.size();
     userHash.put(p, {name = n ; allowMsg = true; image=i});
+    return #ok();
+  };
+
+  public shared({caller}) func getUser(p : ?Principal) : async Result.Result<User, Text> {
+    switch(p) {
+      case(?p) {  
+        let u : ?User = userHash.get(p);
+        switch(u) {
+          case(?u) {  
+            return #ok(u)
+          };
+          case(_) { 
+            return #err("User not found")
+          };
+        };
+      };
+      case(_) { 
+        let u : ?User = userHash.get(caller);
+        switch(u) {
+          case(?u) {  
+            return #ok(u)
+          };
+          case(_) { 
+            return #err("User not found")
+          };
+        };
+      };
+    };
   };
 
 

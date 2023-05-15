@@ -216,3 +216,10 @@ p {
 .Toastify__toast-body > div:last-child {
     font-size: large;
 }
+
+.img-preview {
+    height: auto;
+    border-radius: 50%;
+    max-width: 100%;
+    margin-top: 10px;
+}

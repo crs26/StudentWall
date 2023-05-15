@@ -58,6 +58,9 @@ export const useAuthClient = (options = defaultOptions) => {
   async function updateClient (client) {
     console.log('updateClient')
     const isAuthenticated = await client.isAuthenticated()
+    if (!isAuthenticated) {
+      window.location.replace('/#/login')
+    }
     setIsAuthenticated(isAuthenticated)
 
     const identity = client.getIdentity()

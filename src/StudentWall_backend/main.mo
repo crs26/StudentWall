@@ -43,7 +43,7 @@ actor class StudentWall() {
   };
 
   // Get a specific message by ID
-  public shared query func getMessage(messageId : Nat) : async Result.Result<Message, Text> {
+  public query func getMessage(messageId : Nat) : async Result.Result<Message, Text> {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
@@ -53,6 +53,18 @@ actor class StudentWall() {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
       };
     };
+  };
+
+  // Get user messages
+  public shared ({caller}) func getUserMessages() : async Result.Result<[Message], Text>{
+    let buff = Buffer.Buffer<Message>(1);
+    let t = HashMap.mapFilter<Nat, Message, Message>(messageHash, Nat.equal, Hash.hash, func (k, v) {
+      if(Principal.equal(v.creator, caller)){
+        buff.add(v);
+        return ?v
+      }else return null
+    });
+    return #ok(Buffer.toArray(buff))
   };
 
   // Update the content for a specific message by ID

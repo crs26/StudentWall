@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 
 export default function NewPostCard ({ subject, body, edit, id, setEditPost, update, setData }) {
   const { whoamiActor } = useAuth()
-
+  const [userImg, setUserImg] = useState(null)
   const [post, setPost] = useState({
     subject: '',
     text: ''
@@ -27,6 +27,18 @@ export default function NewPostCard ({ subject, body, edit, id, setEditPost, upd
       }, 2000)
     }
   }, [alert.status])
+
+  useEffect(() => {
+    whoamiActor?.getUser([]).then((e) => {
+      console.log(e)
+      if (e?.ok) {
+        const blob = new global.Blob([e.ok.image], { type: 'image/jpeg' })
+        const urlCreator = window.URL || window.webkitURL
+        const url = urlCreator.createObjectURL(blob)
+        setUserImg(url)
+      }
+    })
+  }, [whoamiActor])
 
   const createPost = () => {
     if (post?.text !== '' && post?.subject !== '') {
@@ -63,7 +75,7 @@ export default function NewPostCard ({ subject, body, edit, id, setEditPost, upd
     <div className='d-md-flex post-card my-3'>
       <div className='d-flex w-100 gap-md-4 justify-content-between justify-content-md-start'>
         <div className='col-1 my-auto d-flex'>
-          <img src='/user.png' className='user-img m-auto' />
+          <img src={userImg} className='user-img m-auto' />
         </div>
         <div className='col-10 col-md-10 d-grid form-inputs'>
           <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' onChange={(e) => setPost({ ...post, subject: e.target.value })} value={post?.subject} />

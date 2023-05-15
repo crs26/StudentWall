@@ -14,7 +14,7 @@ export const LoginPage = () => {
     console.log('login', whoamiActor)
     whoamiActor?.getUser([]).then((e) => {
       if (e?.ok) {
-        window.location.redirect('/')
+        window.location.replace('/')
       } else {
         console.log('Not registered')
       }
@@ -34,13 +34,10 @@ export const LoginPage = () => {
             const uint8Array = new Uint8Array(arrayBuffer)
             console.log('Array value:', uint8Array)
             whoamiActor.addUser(userRef.current.value, principal, uint8Array).then((e) => {
-              console.log()
+              toast('Succesfully Registered')
             })
           }
           reader.readAsArrayBuffer(blob)
-
-          console.log(principal.toString())
-          console.log('Uploading blob:', blob.stream())
         })
         .catch((error) => {
           console.error('Error converting to Blob:', error)
@@ -48,9 +45,6 @@ export const LoginPage = () => {
     } else {
       console.log('No file selected')
     }
-    // whoamiActor.addUser().then((e) => {
-    //   console.log()
-    // })
   }
 
   const handleFileChange = (event) => {
@@ -65,7 +59,6 @@ export const LoginPage = () => {
     } else {
       setSelectedFile(null)
       setPreviewImage(null)
-      console.log('Invalid file size. Please select a file smaller than 1MB.')
       toast('Image file is too large')
     }
   }
@@ -90,12 +83,12 @@ export const LoginPage = () => {
                   />
                 )}
                 <div className='input-group mb-3'>
-                  <input type='text' className='form-control' placeholder='Username' />
+                  <input type='text' className='form-control' placeholder='Username' ref={userRef} />
                   <div className='col-6 input-group-prepend'>
                     <label htmlFor='file-input' className='btn btn-primary'>
                       Image
                     </label>
-                    <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} ref={userRef} />
+                    <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
                     <button className='col-6 btn btn-primary' disabled={!isAuthenticated} onClick={handleRegister}>Register</button>
                   </div>
                 </div>

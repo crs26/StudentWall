@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { Link, useMatch, useResolvedPath } from '../../../../node_modules/react-router-dom/dist/index'
 import Identity from '../helpers/Identity'
 import { GiHamburgerMenu } from 'react-icons/gi'
+import { useAuth } from '../helpers/use-auth-client'
 
 export const Navbar = () => {
   const [showNav, setShowNav] = useState(false)
+  // const [imageUrl, setImageUrl] = useState(null);
+
+  const { whoamiActor, isAuthtenticated } = useAuth()
 
   useEffect(() => {
     const handleResize = () => {
@@ -17,6 +21,18 @@ export const Navbar = () => {
       window.removeEventListener('resize', handleResize)
     }
   }, [])
+
+  useEffect(() => {
+    console.log('lsdfgksjhdbJKSHb', whoamiActor)
+    if (isAuthtenticated) {
+      whoamiActor.getUser([]).then((e) => {
+        console.log(e)
+      })
+    } else {
+      console.log('navbar', isAuthtenticated)
+    }
+  }, [isAuthtenticated])
+
   function NavLink ({ to, children, ...props }) {
     const resolvedPath = useResolvedPath(to)
     const isActive = useMatch({ path: resolvedPath.pathname, end: true })

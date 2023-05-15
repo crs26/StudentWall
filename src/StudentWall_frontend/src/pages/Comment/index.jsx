@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BiUpvote, BiDownvote } from 'react-icons/bi'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import PostCard from '../../components/PostCard'
 import { StudentWall_backend as backend } from '../../../../declarations/StudentWall_backend'
 import NewComment from '../../components/NewComment'
@@ -9,8 +8,6 @@ import NewPostCard from '../../components/NewPostCard'
 export const Comment = (props) => {
   const [comments, setComments] = useState()
   const [editPost, setEditPost] = useState({})
-  const location = useLocation()
-  const [data, setData] = useState(location.state)
   const { id } = useParams()
   const numId = parseInt(id)
 

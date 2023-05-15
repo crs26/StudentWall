@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { BiUpvote, BiDownvote, BiTrash, BiPencil } from 'react-icons/bi'
 import { Link } from '../../../../node_modules/react-router-dom/dist/index'
 import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
+import { useAuth } from "../helpers/use-auth-client";
 
 export default function PostCard({
   data,
@@ -15,6 +16,8 @@ export default function PostCard({
   update }) {
 
   const [deleted, setDeleted] = useState(false);
+  const {isAuthenticated, principal} = useAuth()
+  console.log(data.message?.creator.toString())
 
   const upVote = async (id) => {
     console.log(await backend.upVote(id))
@@ -66,7 +69,7 @@ export default function PostCard({
                   <BiUpvote onClick={() => Number(upVote(data?.id))} />
                   <BiDownvote onClick={() => Number(downVote(data?.id))} />
                 </div>
-                <div className='d-flex justify-content-end gap-3 mt-2'>
+                <div className={`d-flex justify-content-end gap-3 mt-2 ${ data.message?.creator.toString() == principal?.toString() ? 'd-block' : 'd-none' }`}>
                   <BiPencil onClick={() => {
                     setEditPost({ ...editpost, id: data?.id, subject: data?.message?.text, text: data?.message?.content?.Text, edit: true })
                   }} />

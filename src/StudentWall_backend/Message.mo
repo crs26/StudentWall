@@ -4,8 +4,9 @@ import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
 module {
     public func addComment(msg : Types.Message, commentId : Nat) : (Types.Message) {
-        let newComm = Array.append(msg.comments, [commentId]);
-        return ({comments = newComm; text = msg.text; content = msg.content; vote = msg.vote; creator = msg.creator});
+        let newComm = Buffer.fromArray<Nat>(msg.comments);
+        newComm.add(commentId);
+        return ({comments = Buffer.toArray(newComm); text = msg.text; content = msg.content; vote = msg.vote; creator = msg.creator});
     };
     public func removeComment(msg : Types.Message, commentId : Nat) : (Types.Message) {
         let tempComm = Buffer.fromArray<Nat>(msg.comments);

@@ -75,7 +75,7 @@ p {
 
 .user-img {
     width: 4.0em;
-    height: 4.0em;
+    height: auto;
     border-radius: 50%;
 }
 
@@ -206,4 +206,23 @@ p {
     .show.navbar-nav .identity-btn {
         padding: 1.0em;
     }
+}
+
+.modal.fade .modal-dialog {
+    max-width: 80%;
+}
+
+.modal-content {
+    background-color: #1e252b !important;
+}
+
+.Toastify__toast-body > div:last-child {
+    font-size: large;
+}
+
+.img-preview {
+    height: auto;
+    border-radius: 50%;
+    max-width: 100%;
+    margin-top: 10px;
 }

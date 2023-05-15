@@ -30,8 +30,12 @@ actor class StudentWall() {
   stable var postCount : Nat = 0;
   stable var commCount : Nat = 0;
 
-  var messageHash = HashMap.HashMap<Nat, Message>(1, Nat.equal, Hash.hash);
-  var commentHash = HashMap.HashMap<Nat, Comment>(1, Nat.equal, Hash.hash);
+  func _natHash(n : Nat) : (Nat32) {
+    Text.hash(Nat.toText(n));
+  };
+
+  var messageHash = HashMap.HashMap<Nat, Message>(1, Nat.equal, _natHash);
+  var commentHash = HashMap.HashMap<Nat, Comment>(1, Nat.equal, _natHash);
   var userHash = HashMap.HashMap<Principal, User>(1, Principal.equal, Principal.hash);
   var admin = Buffer.Buffer<User>(1);
 
@@ -43,7 +47,7 @@ actor class StudentWall() {
   };
 
   // Get a specific message by ID
-  public shared query func getMessage(messageId : Nat) : async Result.Result<Message, Text> {
+  public query func getMessage(messageId : Nat) : async Result.Result<Message, Text> {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
@@ -53,6 +57,18 @@ actor class StudentWall() {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
       };
     };
+  };
+
+  // Get user messages
+  public shared ({caller}) func getUserMessages() : async Result.Result<[Message], Text>{
+    let buff = Buffer.Buffer<Message>(1);
+    let t = HashMap.mapFilter<Nat, Message, Message>(messageHash, Nat.equal, _natHash, func (k, v) {
+      if(Principal.equal(v.creator, caller)){
+        buff.add(v);
+        return ?v
+      }else return null
+    });
+    return #ok(Buffer.toArray(buff))
   };
 
   // Update the content for a specific message by ID
@@ -225,9 +241,39 @@ actor class StudentWall() {
   };
 
   // User functions
-  public func addUser(n:Text, p:Principal, i:Blob) : async () {
+  public func addUser(n:Text, p:Principal, i:Blob) : async (Result.Result<(), Text>) {
+    if (not enReg) return #err("Registration is disabled");
+    if (Principal.isAnonymous(p)) return #err("Anonymous user is not allowed to register");
     let s = userHash.size();
     userHash.put(p, {name = n ; allowMsg = true; image=i});
+    return #ok();
+  };
+
+  public shared({caller}) func getUser(p : ?Principal) : async Result.Result<User, Text> {
+    switch(p) {
+      case(?p) {  
+        let u : ?User = userHash.get(p);
+        switch(u) {
+          case(?u) {  
+            return #ok(u)
+          };
+          case(_) { 
+            return #err("User not found")
+          };
+        };
+      };
+      case(_) { 
+        let u : ?User = userHash.get(caller);
+        switch(u) {
+          case(?u) {  
+            return #ok(u)
+          };
+          case(_) { 
+            return #err("User not found")
+          };
+        };
+      };
+    };
   };
 
 

@@ -21,8 +21,11 @@ export const Post = () => {
     <div className="container justify-content-center">
       <NewPostCard update={update} setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} />
       {
-        posts?.map((post, id) => {
-          return <PostCard key={id} id={id} data={post} setEditPost={setEditPost} editPost={editPost} update={update} />
+        posts?.map((post) => {
+          if(post.id){
+            const numId = BigInt(post.id)
+            return <PostCard key={numId} id={numId}/>
+          }
         })
       }
     </div>

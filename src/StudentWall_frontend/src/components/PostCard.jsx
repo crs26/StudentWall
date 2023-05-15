@@ -4,27 +4,24 @@ import { Link } from '../../../../node_modules/react-router-dom/dist/index'
 import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
 import { useAuth } from "../helpers/use-auth-client";
 
-export default function PostCard({
-  data,
-  editpost,
-  setEditPost,
-  content,
-  comments,
-  creator,
-  title,
-  vote,
-  update }) {
+export default function PostCard({id}) {
+
+  useEffect(() => {
+    console.log("postcard",id);
+    getUpdatedMessage(id)
+  }, [])
+  
 
   const [deleted, setDeleted] = useState(false);
+  const [post, setPost] = useState(null)
   const {isAuthenticated, principal} = useAuth()
-  console.log(data.message?.creator.toString())
 
   const upVote = async (id) => {
-    backend.upVote(id).then(() => update())
+    backend.upVote(id).then(() => getUpdatedMessage(id))
   }
 
   const downVote = async (id) => {
-    backend.downVote(id).then(() => update())
+    backend.downVote(id).then(() => getUpdatedMessage(id))
   }
 
   const deletePost = async (id) => {
@@ -35,6 +32,13 @@ export default function PostCard({
     setTimeout(() => {
       setDeleted(false)
     }, 2000);
+  }
+
+  const getUpdatedMessage = async (id) => {
+    backend.getMessage(id).then(m => {
+      console.log("postcard", m.ok)
+      setPost(m.ok)
+    })
   }
 
   const deleteAlert = () => {
@@ -56,9 +60,9 @@ export default function PostCard({
             <div className="col-5 col-md-8 col-lg-9 my-auto">
               <div className='d-flex'>
                 <div className='post my-auto'>
-                  <h5>{data?.message?.text}</h5>
+                  <h5>{post?.text}</h5>
                   <p>
-                    {data?.message?.content?.Text}
+                    {post?.content?.Text}
                   </p>
                 </div>
               </div>
@@ -66,23 +70,23 @@ export default function PostCard({
             <div className="col-6 col-md-3 col-lg-2 my-auto">
               <div className='my-auto text-white'>
                 <div className='d-flex justify-content-end gap-3 my-auto'>
-                  <BiUpvote onClick={() => Number(upVote(data?.id))} />
-                  <BiDownvote onClick={() => Number(downVote(data?.id))} />
+                  <BiUpvote onClick={() => Number(upVote(id))} />
+                  <BiDownvote onClick={() => Number(downVote(id))} />
                 </div>
-                <div className={`d-flex justify-content-end gap-3 mt-2 ${ data.message?.creator.toString() == principal?.toString() ? 'd-block' : 'd-none' }`}>
-                  <BiPencil onClick={() => {
-                    setEditPost({ ...editpost, id: data?.id, subject: data?.message?.text, text: data?.message?.content?.Text, edit: true })
-                  }} />
-                  <BiTrash onClick={() => Number(deletePost(data?.id))} />
+                <div className={`d-flex justify-content-end gap-3 mt-2 ${ post?.creator.toString() == principal?.toString() ? 'd-block' : 'd-none' }`}>
+                  {/* <BiPencil onClick={() => {
+                    setEditPost({ ...editpost, id: post?.id, subject: post?.text, text: post?.content?.Text, edit: true })
+                  }} /> */}
+                  <BiTrash onClick={() => Number(deletePost(post?.id))} />
                 </div>
               </div>
             </div>
             <div className="row justify-content-end px-0">
               <div className="col-4 col-sm-3 col-md-2 post-card-footer">
-                <p>{Number(data?.message?.vote) > 0 ? Number(data?.message?.vote) : '0'} upvotes</p>
+                <p>{Number(post?.vote) > 0 ? Number(post?.vote) : '0'} upvotes</p>
               </div>
               <div className="col-4 col-sm-3 col-md-2 post-card-footer">
-                <Link to='/comment' state={data} >{data?.message?.comments?.length > 0 ? data?.message?.comments?.length : '0'} comments</Link>
+                <Link to={`/comment/${id}`} state={post} >{post?.comments?.length > 0 ? post?.comments?.length : '0'} comments</Link>
               </div>
             </div>
           </div>

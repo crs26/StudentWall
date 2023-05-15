@@ -33,7 +33,7 @@ export const Navbar = () => {
     }
   }, [isAuthtenticated])
 
-  function NavLink ({ to, children, ...props }) {
+  function NavLink({ to, children, ...props }) {
     const resolvedPath = useResolvedPath(to)
     const isActive = useMatch({ path: resolvedPath.pathname, end: true })
     return (
@@ -48,9 +48,16 @@ export const Navbar = () => {
   return (
     <nav className='navbar navbar-expand-lg'>
       <div className='container d-flex justify-content-between'>
-        <Link to='/' className='nav-brand col-md-4'>IC Freedom Wall</Link>
-        <ul className='mobile-nav'>
-          <li>
+        <div className='d-flex col-md-4'>
+          <Link to='/' className='nav-brand d-flex'>
+            {/* <img src='/logo2.png' className='nav-logo' /> */}
+            {/* <span> */}
+            IC Freedom Wall
+            {/* </span> */}
+          </Link>
+        </div>
+        <ul className='mobile-nav my-auto'>
+          <li className='my-auto d-flex'>
             <GiHamburgerMenu onClick={() => { setShowNav(!showNav) }} />
           </li>
         </ul>

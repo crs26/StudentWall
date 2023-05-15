@@ -4,6 +4,8 @@ import { Link } from '../../../../node_modules/react-router-dom/dist/index'
 import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
 import { useAuth } from "../helpers/use-auth-client";
 import { Modal } from '../../../../node_modules/react-bootstrap/esm/index';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 export default function PostCard({id}) {
 
@@ -51,6 +53,7 @@ export default function PostCard({id}) {
     whoamiActor.updateMessage(id, postEdit?.text, { "Text": postEdit?.content?.Text }).then((result) => {
       getUpdatedMessage(id)
       setShowModal(false)
+      toast("Post has been updated")
     })
   }
 

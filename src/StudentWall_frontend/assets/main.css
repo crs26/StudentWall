@@ -212,3 +212,7 @@ p {
 .modal-content {
     background-color: #1e252b !important;
 }
+
+.Toastify__toast-body > div:last-child {
+    font-size: large;
+}

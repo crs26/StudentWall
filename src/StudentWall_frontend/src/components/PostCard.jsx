@@ -70,26 +70,26 @@ export default function PostCard ({ id }) {
       <>
         <Modal show={showModal} className='' centered onHide={() => setShowModal(false)}>
           <Modal.Header>
-            <h5 className='modal-title'>Edit Post</h5>
-            <button type='button' className='close' onClick={() => setShowModal(false)}>
+            <h5 className='modal-title'>Update Post</h5>
+            <button type='button' className='primary-btn-danger close' onClick={() => setShowModal(false)}>
               <span aria-hidden='true'>&times;</span>
             </button>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className='px-5'>
             <div className='d-md-flex post-card my-3'>
-              <div className='d-flex w-100 gap-md-4 justify-content-between justify-content-md-start'>
-                <div className='col-1 my-auto d-flex'>
-                  <img src='/user.png' className='user-img m-auto' />
+              <div className='d-flex w-100 justify-content-between justify-content-md-start'>
+                <div className='col-1 mx-auto'>
+                  <img src='/user.png' className='d-flex user-img mx-auto' />
                 </div>
-                <div className='col-10 col-md-10 d-grid form-inputs'>
+                <div className='col-10 col-md-11 d-grid form-inputs'>
                   <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' defaultValue={postEdit?.text} onChange={(e) => setPostEdit({ ...postEdit, text: e.target.value })} />
                   <textarea
                     placeholder='Share something on your mind' defaultValue={postEdit?.content.Text} onChange={(e) => setPostEdit({ ...postEdit, content: { Text: e.target.value } })}
                   />
+                  <div className='mx-auto col-12 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
+                    <button className='primary-btn mt-2 my-md-auto' onClick={editPost}>Update Post</button>
+                  </div>
                 </div>
-              </div>
-              <div className='mx-auto col-12 col-md-3 col-lg-2 d-flex'>
-                <button className='primary-btn mt-2 my-md-auto w-100 px-0' onClick={editPost}>Edit Post</button>
               </div>
             </div>
           </Modal.Body>
@@ -127,7 +127,7 @@ export default function PostCard ({ id }) {
               </div>
               <hr className='text-light' />
               <div className='row text-white d-flex justify-content-end'>
-                <div className='col-4'>
+                <div className='col-4 my-auto'>
                   <div className='row'>
                     <div className='col-5 text-center post-card-footer'>
                       <p>{Number(post?.vote) > 0 ? Number(post?.vote) : '0'} votes</p>

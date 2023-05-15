@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../helpers/use-auth-client'
 import { toast } from 'react-toastify'
 
-export default function NewPostCard({ subject, body, edit, id, setEditPost, update, setData }) {
+export default function NewPostCard ({ subject, body, edit, id, setEditPost, update, setData }) {
   const { whoamiActor } = useAuth()
 
   const [post, setPost] = useState({

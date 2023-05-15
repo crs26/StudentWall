@@ -19,7 +19,7 @@ const defaultOptions = {
    */
   loginOptions: {
     identityProvider:
-      process.env.DFX_NETWORK === "ic"
+      process.env.DFX_NETWORK === "ic" || !process.env.CUSTOM_PROVIDER
         ? "https://identity.ic0.app/#authorize"
         : `http://localhost:4943?canisterId=${process.env.CUSTOM_PROVIDER}#authorize`,
   },

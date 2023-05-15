@@ -5,10 +5,10 @@ const ImageUploader = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
-    const reader = new FileReader()
+    const reader = new global.FileReader()
 
     reader.onloadend = () => {
-      const imageData = new Blob([reader.result], { type: file.type })
+      const imageData = new global.Blob([reader.result], { type: file.type })
       setImage(imageData)
     }
 
@@ -31,6 +31,7 @@ const ImageUploader = () => {
       })
       .catch((error) => {
         // Handle any errors that occur during the upload
+        console.log(error)
       })
   }
 

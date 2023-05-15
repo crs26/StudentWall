@@ -3,20 +3,8 @@ import { useAuth } from './use-auth-client'
 import { ImInfinite } from 'react-icons/im'
 import { CgLogOut } from 'react-icons/cg'
 
-const whoamiStyles = {
-  border: '1px solid #1a1a1a',
-  marginBottom: '1rem'
-}
-
 function LoggedIn () {
-  const [result, setResult] = React.useState('')
-  const { whoamiActor, logout, login, principal, identity, isAuthenticated } = useAuth()
-  console.log('identity', whoamiActor)
-
-  const handleClick = async () => {
-    const whoami = await whoamiActor.whoami()
-    setResult(whoami)
-  }
+  const { logout, login, isAuthenticated } = useAuth()
 
   return (
     <div className='col my-auto identity-btn'>

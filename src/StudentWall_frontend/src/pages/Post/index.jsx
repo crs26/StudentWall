@@ -25,6 +25,7 @@ export const Post = () => {
             const numId = BigInt(post.id)
             return <PostCard key={numId} id={numId} />
           }
+          return ''
         })
       }
     </div>

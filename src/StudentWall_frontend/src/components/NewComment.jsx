@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend'
 import { toast } from 'react-toastify'
 
 export default function NewComment ({ postId, update }) {
-  const [post, setPost] = useState({})
   const inText = useRef()
 
   const addComment = async () => {

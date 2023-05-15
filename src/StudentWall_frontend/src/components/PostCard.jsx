@@ -4,7 +4,7 @@ import { Link } from '../../../../node_modules/react-router-dom/dist/index'
 import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend'
 import { useAuth } from '../helpers/use-auth-client'
 import { Modal } from '../../../../node_modules/react-bootstrap/esm/index'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 export default function PostCard ({ id }) {
   useEffect(() => {
@@ -12,12 +12,10 @@ export default function PostCard ({ id }) {
     getUpdatedMessage(id)
   }, [])
 
-  const [deleted, setDeleted] = useState(false)
   const [post, setPost] = useState(null)
-  const { isAuthenticated, principal, whoamiActor } = useAuth()
+  const { principal, whoamiActor } = useAuth()
   const [showModal, setShowModal] = useState(false)
   const [postEdit, setPostEdit] = useState(null)
-  const [postEditId, setPostEditId] = useState(null)
 
   const upVote = async (id) => {
     backend.upVote(id).then(() => {
@@ -38,16 +36,11 @@ export default function PostCard ({ id }) {
       console.log(getUpdatedMessage(id))
       toast('Post has been deleted')
     })
-
-    setTimeout(() => {
-      setDeleted(false)
-    }, 2000)
   }
 
   const updatePost = () => {
     backend.getMessage(id).then((m) => {
       console.log(m.ok)
-      setPostEditId(id)
       setPostEdit(m.ok)
     })
   }
@@ -66,14 +59,6 @@ export default function PostCard ({ id }) {
       console.log('postcard', m.ok)
       setPost(m.ok)
     })
-  }
-
-  const deleteAlert = () => {
-    return (
-      <div className='my-auto'>
-        <h4 className='alert-text'>Deleted successfully</h4>
-      </div>
-    )
   }
 
   const shortPrincipal = (p) => {

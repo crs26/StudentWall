@@ -4,12 +4,16 @@ import { HashRouter } from "react-router-dom"
 import store from './app/store'
 import { Provider } from 'react-redux'
 import { App } from "./App";
+import { AuthProvider } from "./helpers/use-auth-client";
+
 
 ReactDOM.createRoot(document.getElementById("app")).render(
   <React.StrictMode>
     <HashRouter>
       <Provider store={store}>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </Provider>
     </HashRouter>
   </React.StrictMode>

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
+import { useAuth } from "../helpers/use-auth-client";
+
 
 export default function NewPostCard({ subject, body, edit, id, setEditPost, update, setData }) {
+  const { whoamiActor} = useAuth();
+
   const [post, setPost] = useState({
     subject: '',
     text: ''
@@ -27,7 +30,7 @@ export default function NewPostCard({ subject, body, edit, id, setEditPost, upda
 
   const createPost = () => {
     if (post?.text !== '' && post?.subject !== '') {
-      backend.writeMessage(post?.subject, { "Text": post?.text }).then((result) => {
+      whoamiActor.writeMessage(post?.subject, { "Text": post?.text }).then((result) => {
         setAlert({ ...alert, message: 'New post added!', status: true })
         update()
       })
@@ -39,7 +42,7 @@ export default function NewPostCard({ subject, body, edit, id, setEditPost, upda
 
   const updatePost = () => {
     if (subject !== '' && body !== '') {
-      backend.updateMessage(id, post?.subject, { "Text": post?.text }).then((result) => {
+      whoamiActor.updateMessage(id, post?.subject, { "Text": post?.text }).then((result) => {
         setAlert({ ...alert, message: 'Post, edited!', status: true })
         update()
       })

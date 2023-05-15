@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend';
+import {toast} from 'react-toastify'
 
 export default function NewComment({ postId, update }) {
   const [post, setPost] = useState({});
@@ -8,6 +9,7 @@ export default function NewComment({ postId, update }) {
   const addComment = async () => {
     backend.writeComment(inText.current.value, postId).then(() => {
       update()
+      toast("Comment added");
     })
   }
 

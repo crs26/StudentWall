@@ -23,16 +23,23 @@ export default function PostCard({id}) {
   const [postEditId, setPostEditId] = useState(null)
 
   const upVote = async (id) => {
-    backend.upVote(id).then(() => getUpdatedMessage(id))
+    backend.upVote(id).then(() => {
+      getUpdatedMessage(id)
+      toast("Vote has been updated")
+    })
   }
 
   const downVote = async (id) => {
-    backend.downVote(id).then(() => getUpdatedMessage(id))
+    backend.downVote(id).then(() => {
+      getUpdatedMessage(id)
+      toast("Vote has been updated")
+    })
   }
 
   const deletePost = async (id) => {
     backend.deleteMessage(id).then(result => {
       setDeleted(true)
+      toast("Post has been deleted")
     })
 
     setTimeout(() => {
@@ -137,7 +144,7 @@ export default function PostCard({id}) {
                       updatePost()
                       setShowModal(true)
                     }} />
-                    <BiTrash onClick={() => Number(deletePost(post?.id))} />
+                    <BiTrash onClick={() => Number(deletePost(id))} />
                   </div>
                 </div>
               </div>

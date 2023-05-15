@@ -5,10 +5,10 @@ import { toast } from 'react-toastify'
 
 export const LoginPage = () => {
   const { isAuthenticated, whoamiActor, principal } = useAuth()
-  const [selectedFile, setSelectedFile] = useState(null)
   const [previewImage, setPreviewImage] = useState(null)
-  const userRef = useRef(null)
+  const [imgBlob, setImgBlob] = useState(null)
   const MAX_FILE_SIZE = 1048576
+  const userRef = useRef(null)
 
   useEffect(() => {
     console.log('login', whoamiActor)
@@ -21,46 +21,34 @@ export const LoginPage = () => {
     })
   }, [isAuthenticated])
 
-  const handleRegister = () => {
-    if (selectedFile) {
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file && file.size <= MAX_FILE_SIZE) {
+      const urlCreator = window.URL || window.webkitURL
+      const url = urlCreator.createObjectURL(file)
+      setPreviewImage(url)
       // Convert the selected image to a Blob
-      fetch(previewImage)
-        .then((response) => response.blob())
-        .then((blob) => {
-          // Perform upload logic with the Blob object
-          const reader = new global.FileReader()
-          reader.onloadend = () => {
-            const arrayBuffer = reader.result
-            const uint8Array = new Uint8Array(arrayBuffer)
-            console.log('Array value:', uint8Array)
-            whoamiActor.addUser(userRef.current.value, principal, uint8Array).then((e) => {
-              toast('Succesfully Registered')
-            })
-          }
-          reader.readAsArrayBuffer(blob)
-        })
-        .catch((error) => {
-          console.error('Error converting to Blob:', error)
-        })
+
+      // Perform upload logic with the Blob object
+      const reader = new global.FileReader()
+      reader.onloadend = () => {
+        const arrayBuffer = reader.result
+        console.log(arrayBuffer)
+        const uint8Array = new Uint8Array(arrayBuffer)
+        console.log('Array value:', uint8Array)
+        setImgBlob(uint8Array)
+      }
+      reader.readAsArrayBuffer(file)
     } else {
       console.log('No file selected')
     }
   }
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]
-    if (file && file.size <= MAX_FILE_SIZE) {
-      setSelectedFile(file)
-      const reader = new global.FileReader()
-      reader.onload = () => {
-        setPreviewImage(reader.result)
-      }
-      reader.readAsDataURL(file)
-    } else {
-      setSelectedFile(null)
-      setPreviewImage(null)
-      toast('Image file is too large')
-    }
+  const handleRegister = () => {
+    whoamiActor.addUser(userRef.current.value, principal, imgBlob).then((e) => {
+      toast('Succesfully Registered')
+      window.location.replace('/')
+    })
   }
 
   return (
@@ -89,7 +77,7 @@ export const LoginPage = () => {
                       Image
                     </label>
                     <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
-                    <button className='col-6 btn btn-primary' disabled={!isAuthenticated} onClick={handleRegister}>Register</button>
+                    <button className='col-6 btn btn-primary' onClick={handleRegister}>Register</button>
                   </div>
                 </div>
               </div>

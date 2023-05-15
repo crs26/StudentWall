@@ -8,7 +8,6 @@ import { toast } from 'react-toastify'
 
 export default function PostCard ({ id }) {
   useEffect(() => {
-    console.log('postcard', id)
     getUpdatedMessage(id)
   }, [])
 
@@ -35,20 +34,17 @@ export default function PostCard ({ id }) {
 
   const deletePost = async (id) => {
     backend.deleteMessage(id).then(result => {
-      console.log(getUpdatedMessage(id))
       toast('Post has been deleted')
     })
   }
 
   const updatePost = () => {
     backend.getMessage(id).then((m) => {
-      console.log(m.ok)
       setPostEdit(m.ok)
     })
   }
 
   const editPost = () => {
-    console.log(postEdit)
     whoamiActor.updateMessage(id, postEdit?.text, { Text: postEdit?.content?.Text }).then((result) => {
       getUpdatedMessage(id)
       setShowModal(false)
@@ -66,7 +62,6 @@ export default function PostCard ({ id }) {
           const url = urlCreator.createObjectURL(blob)
           setUserImg(url)
           setUserName(e.ok.name)
-          console.log(e.ok)
         }
       })
     })
@@ -74,6 +69,21 @@ export default function PostCard ({ id }) {
 
   const shortPrincipal = (p) => {
     if (p) return `${p.substring(0, 5)}...${p.substring(p.length - 3)}`
+  }
+
+  const renderContent = () => {
+    if (post?.content?.Text) {
+      return (
+        <p>{post.content.Text}</p>
+      )
+    } else {
+      const blob = new global.Blob([post?.content?.Image], { type: 'image/jpeg' })
+      const urlCreator = window.URL || window.webkitURL
+      const url = urlCreator.createObjectURL(blob)
+      return (
+        <img src={url} />
+      )
+    }
   }
 
   const renderEditModal = () => {
@@ -94,9 +104,7 @@ export default function PostCard ({ id }) {
                 </div>
                 <div className='col-10 col-md-11 d-grid form-inputs'>
                   <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' defaultValue={postEdit?.text} onChange={(e) => setPostEdit({ ...postEdit, text: e.target.value })} />
-                  <textarea
-                    placeholder='Share something on your mind' defaultValue={postEdit?.content.Text} onChange={(e) => setPostEdit({ ...postEdit, content: { Text: e.target.value } })}
-                  />
+                  {renderContent()}
                   <div className='mx-auto col-12 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
                     <button className='primary-btn mt-2 my-md-auto' onClick={editPost}>Update Post</button>
                   </div>
@@ -132,9 +140,7 @@ export default function PostCard ({ id }) {
               <div className='col-12 my-auto'>
                 <div className='row px-md-5'>
                   <h5>{post?.text}</h5>
-                  <p>
-                    {post?.content?.Text}
-                  </p>
+                  {renderContent()}
                 </div>
               </div>
               <hr className='text-light' />

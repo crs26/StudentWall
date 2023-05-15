@@ -38,8 +38,8 @@ export const Navbar = () => {
             IC Freedom Wall
           </span>
         </Link>
-        <ul className='mobile-nav'>
-          <li>
+        <ul className='mobile-nav my-auto'>
+          <li className='my-auto d-flex'>
             <GiHamburgerMenu onClick={() => { setShowNav(!showNav) }} />
           </li>
         </ul>

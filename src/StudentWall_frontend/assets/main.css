@@ -31,6 +31,10 @@ p {
     color: #bbb7b7;
 }
 
+.text-main {
+    color: #ff571A !important;
+}
+
 .nav-logo {
     width: 1.3em;
 }
@@ -95,6 +99,15 @@ p {
     width: 80%;
 }
 
+.username-reg {
+    font-size: 1rem;
+    color: #fff;
+    background: #2C353D;
+    padding: 0.5em 1.0em;
+    border-radius: 10px;
+    border: none;
+}
+
 .post-card input[type="text"] {
     font-size: 1rem;
     color: #fff;
@@ -122,7 +135,9 @@ p {
 }
 
 .post-card textarea:focus,
-.post-card input[type="text"]:focus {
+.post-card input[type="text"]:focus,
+.username-reg:focus
+ {
     outline: none;
     box-shadow: 0 0 1px 2px #ad3f0c;
     transition: ease-in-out all 0.3s;
@@ -133,7 +148,8 @@ p {
 }
 
 .primary-btn,
-.primary-btn-danger {
+.primary-btn-danger,
+.secondary-btn {
     font-size: 1.4rem;
     font-weight: 500;
     height: 2.0em;
@@ -156,6 +172,10 @@ p {
 .primary-btn:hover {
     background-color: #e44106;
     transition: ease-in-out all 0.3s;
+}
+
+.secondary-btn {
+    background-color: #bd2d02 !important;
 }
 
 .post-card .post {

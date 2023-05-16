@@ -82,7 +82,9 @@ export default function PostCard ({ id }) {
       const urlCreator = window.URL || window.webkitURL
       const url = urlCreator.createObjectURL(blob)
       return (
-        <img src={url} />
+        <div className='col-6'>
+          <img src={url} className='w-100' />
+        </div>
       )
     }
   }
@@ -129,7 +131,7 @@ export default function PostCard ({ id }) {
         <div className='row post-card my-3 justify-content-center'>
           <div className='col-3 col-md-1'>
             <div className='col my-auto'>
-              <div className='row'>
+              <div>
                 <img src={user.image || '/user.png'} className='user-img my-auto' />
               </div>
               <p>{user.name}</p>
@@ -138,7 +140,7 @@ export default function PostCard ({ id }) {
           </div>
           <div className='col-12 col-md-11'>
             <div className='row'>
-              <div className='col-12 my-auto'>
+              <div className='col-12 my-auto py-4'>
                 <div className='row px-md-5'>
                   <h5>{post?.text}</h5>
                   {renderContent()}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../helpers/use-auth-client'
 import { toast } from 'react-toastify'
+import { BsFillImageFill } from 'react-icons/bs'
 
 export default function NewPostCard ({ update }) {
   const { whoamiActor, user } = useAuth()
@@ -20,17 +21,20 @@ export default function NewPostCard ({ update }) {
     if (typeof post?.text !== 'undefined' && typeof post?.subject !== 'undefined') {
       if (imgBlob) {
         whoamiActor.writeMessage(post?.subject, { Image: imgBlob }).then((result) => {
-          if (result.ok) {
+          if (result) {
+            console.log('ok')
             toast.success('Post has been created')
             update()
             setPost({ subject: '', text: '' })
+            setImgBlob(null)
           } else {
             toast.error(result.err)
           }
         })
       } else {
         whoamiActor.writeMessage(post?.subject, { Text: post?.text }).then((result) => {
-          if (result.ok) {
+          if (result) {
+            console.log('ok 2')
             toast.success('Post has been created')
             update()
             setPost({ subject: '', text: '' })
@@ -73,20 +77,29 @@ export default function NewPostCard ({ update }) {
   const renderContentArea = () => {
     if (!imgBlob) {
       return (
-        <textarea
-          placeholder='Share something on your mind'
-          value={post?.text}
-          onChange={(e) => {
-            setPost({ ...post, text: e.target.value })
-          }}
-        />
+        <div className='post-body'>
+          <textarea
+            className='w-100'
+            placeholder='Share something on your mind'
+            value={post?.text}
+            onChange={(e) => {
+              setPost({ ...post, text: e.target.value })
+            }}
+          />
+          <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-start mt-2 d-flex w-100'>
+            <label htmlFor='file-input' className='file-input'>
+              <BsFillImageFill />
+            </label>
+            <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
+          </div>
+        </div>
       )
     } else {
       return (
-        <>
-          <button className='btn btn-primary' onClick={() => setImgBlob(null)}>x</button>
-          <img src={previewImage} />
-        </>
+        <div className='col-6' style={{ position: 'relative' }}>
+          <img src={previewImage} className='img-upload-preview' />
+          <button className='primary-btn close-preview-btn' onClick={() => setImgBlob(null)}>x</button>
+        </div>
       )
     }
   }
@@ -104,12 +117,6 @@ export default function NewPostCard ({ update }) {
           <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' onChange={(e) => setPost({ ...post, subject: e.target.value })} value={post?.subject} />
           {renderContentArea()}
           <div className='row'>
-            <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
-              <label htmlFor='file-input' className='btn btn-primary'>
-                Image
-              </label>
-              <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
-            </div>
             <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
               <button className='primary-btn create-post-btn my-md-auto' onClick={createPost}>Create Post</button>
             </div>

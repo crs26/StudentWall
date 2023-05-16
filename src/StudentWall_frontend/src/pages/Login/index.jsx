@@ -50,13 +50,13 @@ export const LoginPage = () => {
           <div className='card-body'>
             <div className='row d-flex justify-content-center'>
               <h3 className='text-center'>User Registration</h3>
-              <div className='col-8'>
+              <div className='col-8 text-center'>
                 {previewImage && (
                   <img
                     src={previewImage}
                     alt='Preview'
-                    className='img-preview'
-                    style={{ maxWidth: '100%', marginTop: '10px' }}
+                    className='img-preview mx-auto'
+                    style={{ maxWidth: '10.0em', height: '10.0em', margin: '10px' }}
                   />
                 )}
                 <div className='input-group mb-3 d-flex'>

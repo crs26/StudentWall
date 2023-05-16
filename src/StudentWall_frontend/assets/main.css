@@ -83,7 +83,7 @@ p {
 
 .user-img {
     width: 4.0em;
-    height: auto;
+    height: 4.0em;
     border-radius: 50%;
 }
 
@@ -92,6 +92,27 @@ p {
     border-radius: 10px;
     justify-content: space-between !important;
     background: #262D34;
+}
+
+.post-body {
+    background-color: #2C353D;
+    border-radius: 10px;
+}
+
+.img-upload-preview {
+    width: 100%;
+}
+
+.file-input svg {
+    border-radius: 10px !important;
+}
+
+.close-preview-btn {
+    position: absolute !important;
+    font-size: calc(100% + 1vh) !important;
+    right: 8px;
+    top: 8px;
+    padding: 0 18px !important;
 }
 
 .form-inputs {
@@ -136,8 +157,7 @@ p {
 
 .post-card textarea:focus,
 .post-card input[type="text"]:focus,
-.username-reg:focus
- {
+.username-reg:focus {
     outline: none;
     box-shadow: 0 0 1px 2px #ad3f0c;
     transition: ease-in-out all 0.3s;

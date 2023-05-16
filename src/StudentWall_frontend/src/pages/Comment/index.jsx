@@ -59,7 +59,7 @@ export const Comment = (props) => {
     if (creator === principal.toString()) {
       return (
         <div className='col-1' id={id}>
-          <div className='col-1 mx-auto my-1'>
+          <div className='col-1 my-1'>
             <BiPencil
               onClick={() => {
                 setEditComment({ id, text })
@@ -109,10 +109,11 @@ export const Comment = (props) => {
         : ''}
       <PostCard id={numId} setEditPost={setEditPost} editPost={editPost} update={update} />
       {comments?.ok?.map((comment, id) => {
-        console.log(comment)
-        const blob = new global.Blob([comment.creator._arr], { type: 'image/jpeg' })
+        const blob = new global.Blob([comment?.creator?.image], { type: 'image/jpeg' })
         const urlCreator = window.URL || window.webkitURL
         const url = urlCreator.createObjectURL(blob)
+        console.log(comment?.creator?.name)
+        console.log(comment)
         return (
           <div key={id} className='my-2 px-2 mx-1'>
             <div className='row post-card justify-content-center'>
@@ -120,6 +121,7 @@ export const Comment = (props) => {
                 <div className='col-12 col-md-12'>
                   <div className='d-flex gap-2 text-left col my-auto'>
                     <div className='my-auto'>
+
                       <img src={url || '/user.png'} className='user-img my-auto' />
                     </div>
                     <div className='my-auto'>

@@ -58,7 +58,7 @@ export const Comment = (props) => {
   const renderOwnerAction = (creator, id, text) => {
     if (creator === principal.toString()) {
       return (
-        <div className='col-4'>
+        <div className='col-4' id={id}>
           <div className='col-1'>
             <BiPencil onClick={() => {
               setEditComment({ id, text })
@@ -102,7 +102,7 @@ export const Comment = (props) => {
           )
         : ''}
       <PostCard id={numId} setEditPost={setEditPost} editPost={editPost} update={update} />
-      {comments?.ok?.map((item, id) => {
+      {comments?.ok?.map((comment, id) => {
         return (
           <div key={id} className='my-2 px-2 mx-1'>
             <div className='row post-card justify-content-center'>
@@ -110,14 +110,14 @@ export const Comment = (props) => {
                 <img src='/user.png' className='user-img my-auto' />
                 <div className='my-auto'>
                   <p className='m-0'>
-                    {item.comment?.text}
+                    {comment?.text}
                   </p>
                   <p className='m-0'>
-                    {item.comment?.creator.toString()}
+                    {comment?.creator.toString()}
                   </p>
                 </div>
               </div>
-              {renderOwnerAction(item.comment.creator.toString(), item.id, item.comment.text)}
+              {renderOwnerAction(comment.creator.toString(), id, comment.text)}
             </div>
           </div>
         )

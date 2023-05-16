@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Identity from '../../helpers/Identity'
 import { useAuth } from '../../helpers/use-auth-client'
 import { toast } from 'react-toastify'
@@ -9,17 +9,6 @@ export const LoginPage = () => {
   const [imgBlob, setImgBlob] = useState(null)
   const MAX_FILE_SIZE = 1048576
   const userRef = useRef(null)
-
-  useEffect(() => {
-    console.log('login', whoamiActor)
-    whoamiActor?.getUser([]).then((e) => {
-      if (e?.ok) {
-        window.location.replace('/')
-      } else {
-        console.log('Not registered')
-      }
-    })
-  }, [isAuthenticated])
 
   const handleFileChange = (event) => {
     const file = event.target.files[0]

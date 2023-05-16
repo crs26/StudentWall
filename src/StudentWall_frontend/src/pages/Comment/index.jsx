@@ -55,6 +55,10 @@ export const Comment = (props) => {
     })
   }
 
+  const shortPrincipal = (p) => {
+    if (p) return `${p.substring(0, 5)}...${p.substring(p.length - 3)}`
+  }
+
   const renderOwnerAction = (creator, id, text) => {
     if (creator === principal.toString()) {
       return (
@@ -105,10 +109,13 @@ export const Comment = (props) => {
       {editPost?.edit
         ? (
           <NewPostCard setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} update={update} />
-          )
+        )
         : ''}
       <PostCard id={numId} setEditPost={setEditPost} editPost={editPost} update={update} />
       {comments?.ok?.map((comment, id) => {
+        const blob = new global.Blob([comment?.creator?.image], { type: 'image/jpeg' })
+        const urlCreator = window.URL || window.webkitURL
+        const url = urlCreator.createObjectURL(blob)
         return (
           <div key={id} className='my-2 px-2 mx-1'>
             <div className='row post-card justify-content-center'>
@@ -116,11 +123,12 @@ export const Comment = (props) => {
                 <div className='col-12 col-md-12'>
                   <div className='d-flex gap-2 text-left col my-auto'>
                     <div className='my-auto'>
-                      <img src={user.image || '/user.png'} className='user-img my-auto' />
+
+                      <img src={url || '/user.png'} className='user-img my-auto' />
                     </div>
                     <div className='my-auto'>
-                      <p className='m-0'>{user.name}</p>
-                      <p className='m-0'>{user.principalShort}</p>
+                      <p className='m-0'>{comment?.creator?.name}</p>
+                      <p className='m-0'>{shortPrincipal(comment?.comment?.creator.toString())}</p>
                     </div>
                   </div>
                 </div>
@@ -135,7 +143,7 @@ export const Comment = (props) => {
                   {renderOwnerAction(comment.creator.toString(), id, comment.text)}
                 </div>
                 <div className='text-light text-right'>
-                  {comment.updatedAt.length ? `Edited: ${Date(parseInt(comment.updatedAt))}` : `Posted: ${Date(parseInt(comment.createdAt))}`}
+                  {comment?.comment?.updatedAt.length ? `Edited: ${Date(parseInt(comment.updatedAt))}` : `Posted: ${Date(parseInt(comment.createdAt))}`}
                 </div>
               </div>
             </div>

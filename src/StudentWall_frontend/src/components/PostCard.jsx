@@ -82,7 +82,9 @@ export default function PostCard ({ id }) {
       const urlCreator = window.URL || window.webkitURL
       const url = urlCreator.createObjectURL(blob)
       return (
-        <img src={url} />
+        <div className='col-6'>
+          <img src={url} className='w-100' />
+        </div>
       )
     }
   }

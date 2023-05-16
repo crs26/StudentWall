@@ -135,17 +135,17 @@ export default function PostCard ({ id }) {
       <div className='px-2 mx-1'>
         <div className='row post-card my-3 justify-content-center'>
           <div className='col-3 col-md-1'>
-            <div className='col my-auto'>
-              <div className='row'>
+            <div className='col my-auto text-center'>
+              <div className='text-center'>
                 <img src={userImg || '/user.png'} className='user-img my-auto' />
               </div>
-              <p>{userName}</p>
+              <p className='m-0'>{userName}</p>
               <p>{shortPrincipal(principal?.toString())}</p>
             </div>
           </div>
           <div className='col-12 col-md-11'>
             <div className='row'>
-              <div className='col-12 my-auto'>
+              <div className='col-12 my-auto py-4'>
                 <div className='row px-md-5'>
                   <h5>{post?.text}</h5>
                   {renderContent()}

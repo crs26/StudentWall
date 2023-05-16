@@ -79,7 +79,7 @@ export const useAuthClient = (options = defaultOptions) => {
       }
     })
 
-    console.log(actor)
+    setUser({})
 
     setWhoamiActor(actor)
     actor.getUser([principal]).then((e) => {

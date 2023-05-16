@@ -9,6 +9,7 @@ export const LoginPage = () => {
   const [imgBlob, setImgBlob] = useState(null)
   const MAX_FILE_SIZE = 1048576
   const userRef = useRef(null)
+  const [userName, setuserName] = useState('')
 
   const handleFileChange = (event) => {
     const file = event.target.files[0]
@@ -40,6 +41,8 @@ export const LoginPage = () => {
     })
   }
 
+  console.log(user)
+
   return (
     <div className='row d-flex justify-content-center align-items-center m-0' style={{ height: '90vh', width: '100vw' }}>
       <div className='col-10 col-md-8 col-xl-4'>
@@ -50,6 +53,7 @@ export const LoginPage = () => {
           <div className='card-body'>
             <div className='row d-flex justify-content-center'>
               <h3 className='text-center'>User Registration</h3>
+              <p className='text-center'>{user.principal}</p>
               <div className='col-8 text-center'>
                 {previewImage && (
                   <img
@@ -60,13 +64,14 @@ export const LoginPage = () => {
                   />
                 )}
                 <div className='input-group mb-3 d-flex'>
-                  <input type='text' className='rounded my-1 username-reg col-12' placeholder='Username' ref={userRef} />
+                  <input type='text' className='rounded my-1 username-reg col-12' placeholder='Username' ref={userRef} onChange={(e) => setuserName(e.target.value)} />
                   <div className='col-12 input-group-prepend'>
                     <label htmlFor='file-input' className='btn btn-primary w-50 col-md-6'>
                       Image
                     </label>
                     <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
-                    <button className='col-6 btn btn-primary w-50 col-md-6' disabled={!isAuthenticated} onClick={handleRegister}>Register</button>
+                    <button className={`col-6 btn btn-primary w-50 col-md-6 ${imgBlob && userName.length ? '' : 'd-none'}`} disabled={!isAuthenticated && userName.length > 0} onClick={handleRegister}>Register</button>
+                    <p className='text-light'>User display picture is reuired</p>
                   </div>
                 </div>
               </div>

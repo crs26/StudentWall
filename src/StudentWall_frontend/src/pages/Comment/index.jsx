@@ -110,13 +110,15 @@ export const Comment = (props) => {
       {comments?.ok?.map((comment, id) => {
         return (
           <div key={id} className='my-2 px-2 mx-1'>
-            <div className='row post-card justify-content-center px-4'>
-              <div className='col-11 d-flex p-0'>
-                <div className='col-2 m-auto text-center'>
-                  <img src={user.image || '/user.png'} className='d-flex user-img mx-auto' />
-                  <p>{user.name}</p>
+            <div className='row post-card justify-content-center'>
+              <div className='col-8 d-flex gap-3'>
+                <img src={user.image || '/user.png'} className='user-img my-auto' />
+                <div className='text-light'>
+                  {user.name}
+                  <br />
+                  {user.principalShort}
                 </div>
-                <div className='my-auto col-10'>
+                <div className='my-auto'>
                   <p className='m-0'>
                     {comment?.text}
                   </p>
@@ -125,6 +127,9 @@ export const Comment = (props) => {
                       {comment?.creator.toString()}
                     </i>
                   </p>
+                </div>
+                <div className='text-light'>
+                  {comment.updatedAt.length ? `Edited: ${Date(parseInt(comment.updatedAt))}` : `Posted: ${Date(parseInt(comment.createdAt))}`}
                 </div>
               </div>
               {renderOwnerAction(comment.creator.toString(), id, comment.text)}

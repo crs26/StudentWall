@@ -7,7 +7,7 @@ module {
     public func addComment(msg : Types.Message, comment : Types.Comment) : (Types.Message) {
         let newComm = Buffer.fromArray<Types.Comment>(msg.comments);
         newComm.add(comment);
-        return ({comments = Buffer.toArray(newComm); text = msg.text; content = msg.content; vote = msg.vote; creator = msg.creator});
+        return ({comments = Buffer.toArray(newComm); text = msg.text; content = msg.content; vote = msg.vote; creator = msg.creator; createdAt = msg.createdAt; updatedAt = msg.updatedAt});
     };
     public func removeComment(msg : Types.Message, commentId : Nat) : (Types.Message) {
         let tempComm = Buffer.fromArray<Types.Comment>(msg.comments);
@@ -15,7 +15,7 @@ module {
         switch(comm) {
             case(?comm) {  
                 ignore tempComm.remove(commentId);
-                return ({comments = Buffer.toArray<Types.Comment>(tempComm); text = msg.text; content = msg.content; vote = msg.vote; creator = msg.creator});
+                return ({comments = Buffer.toArray<Types.Comment>(tempComm); text = msg.text; content = msg.content; vote = msg.vote; creator = msg.creator; createdAt = msg.createdAt; updatedAt = msg.updatedAt});
             };
             case(_) { 
                 return msg

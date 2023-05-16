@@ -90,7 +90,7 @@ export const useAuthClient = (options = defaultOptions) => {
         const urlCreator = window.URL || window.webkitURL
         const url = urlCreator.createObjectURL(blob)
         console.log(url)
-        setUser({ image: url, name: e.ok.name, allowMsg: e.ok.allowMsg, principal: principal.toString() })
+        setUser({ image: url, name: e.ok.name, allowMsg: e.ok.allowMsg, principal: principal.toString(), principalShort: `${principal.toString().substring(0, 5)}...${principal.toString().substring(principal.toString().length - 3)}` })
       }
     })
   }

@@ -11,12 +11,16 @@ module {
     content : Content;
     vote : Int;
     creator : Principal;
-    comments : [Comment]
+    comments : [Comment];
+    createdAt : Int;
+    updatedAt : ?Int;
   };
 
   public type Comment = {
     text : Text;
     creator : Principal;
+    createdAt : Int;
+    updatedAt : ?Int;
   };
 
   public type Answer = (

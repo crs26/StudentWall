@@ -21,8 +21,7 @@ export default function NewPostCard ({ update }) {
     if (typeof post?.text !== 'undefined' && typeof post?.subject !== 'undefined') {
       if (imgBlob) {
         whoamiActor.writeMessage(post?.subject, { Image: imgBlob }).then((result) => {
-          if (result) {
-            console.log('ok')
+          if (!result.err) {
             toast.success('Post has been created')
             update()
             setPost({ subject: '', text: '' })
@@ -33,8 +32,7 @@ export default function NewPostCard ({ update }) {
         })
       } else {
         whoamiActor.writeMessage(post?.subject, { Text: post?.text }).then((result) => {
-          if (result) {
-            console.log('ok 2')
+          if (!result.err) {
             toast.success('Post has been created')
             update()
             setPost({ subject: '', text: '' })

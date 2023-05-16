@@ -36,15 +36,9 @@ export default function PostCard ({ id }) {
     })
   }
 
-  const updatePost = () => {
-    backend.getMessage(id).then((m) => {
-      setPostEdit(m.ok)
-    })
-  }
-
   const editPost = () => {
     if (postEdit?.content?.Text) {
-      whoamiActor.updateMessage(id, postEdit?.subject, { Text: postEdit?.text }).then((result) => {
+      whoamiActor.updateMessage(id, postEdit?.text, { Text: postEdit?.content.Text }).then((result) => {
         getUpdatedMessage(id)
         setShowModal(false)
         toast('Post has been updated')
@@ -86,6 +80,27 @@ export default function PostCard ({ id }) {
     }
   }
 
+  const renderEditContent = () => {
+    if (postEdit?.content.Text) {
+      return (
+        <textarea
+          name='text' placeholder={post?.content?.Text}
+          defaultValue={postEdit?.content.Text}
+          onChange={(e) => setPostEdit({ ...postEdit, content: { Text: e.target.value } })}
+        />
+      )
+    } else {
+      const blob = new global.Blob([post?.message.content?.Image], { type: 'image/jpeg' })
+      const urlCreator = window.URL || window.webkitURL
+      const url = urlCreator.createObjectURL(blob)
+      return (
+        <div className='col-6'>
+          <img src={url} className='w-100' />
+        </div>
+      )
+    }
+  }
+
   const renderEditModal = () => {
     return (
       <>
@@ -100,11 +115,8 @@ export default function PostCard ({ id }) {
             <div className='d-md-flex post-card my-3'>
               <div className='d-flex w-100 justify-content-between justify-content-md-start'>
                 <div className='col-12 d-grid form-inputs'>
-                  <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' defaultValue={postEdit?.text} onChange={(e) => setPostEdit({ ...postEdit, subject: e.target.value })} />
-                  <textarea
-                    name='text' placeholder={post?.content?.Text}
-                    onChange={(e) => setPostEdit({ ...postEdit, text: e.target.value })}
-                  />
+                  <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' defaultValue={postEdit?.text} onChange={(e) => setPostEdit({ ...postEdit, text: e.target.value })} />
+                  {renderEditContent()}
                   <div className='mx-auto col-12 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
                     <button className='primary-btn mt-2 my-md-auto' onClick={editPost}>Update Post</button>
                   </div>
@@ -149,7 +161,7 @@ export default function PostCard ({ id }) {
             <div className='row justify-content-center'>
               <div className='col-12 my-auto py-4'>
                 <div className='row px-md-5'>
-                  <h5>{post?.text}</h5>
+                  <h5>{post?.message.text}</h5>
                   {renderContent()}
                 </div>
               </div>
@@ -171,7 +183,7 @@ export default function PostCard ({ id }) {
 
                 <div className={`col-md-1 col-2 ${post?.message.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
                   <BiPencil onClick={() => {
-                    updatePost()
+                    setPostEdit(post.message)
                     setShowModal(true)
                   }}
                   />

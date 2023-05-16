@@ -175,6 +175,10 @@ p {
     color: #FF6934 !important;
 }
 
+.modal-dialog {
+    max-width: 50% !important;
+}
+
 .primary-btn,
 .primary-btn-danger,
 .secondary-btn {

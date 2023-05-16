@@ -301,25 +301,38 @@ actor class StudentWall() {
     };
   };
 
-  public query func getComment(messageId:Nat) : async Result.Result<[Comment], Text> {
-    let msg : ?Message = messageHash.get(messageId);
-    var commBuff = Buffer.Buffer<Comment>(1);
-    switch(msg) {
-      case(?msg) {  
-        return #ok(msg.comments)
-      };
-      case(_) { 
-        // return error invalid message id
-        return #err("Invalid message Id")
-      };
-    };
-  };
+  // public query func getComment(messageId:Nat) : async Result.Result<[.Comment], Text> {
+  //   let msg : ?Message = messageHash.get(messageId);
+  //   var commBuff = Buffer.Buffer<Comment>(1);
+  //   switch(msg) {
+  //     case(?msg) {
+  //       return #ok(msg.comments)
+  //     };
+  //     case(_) { 
+  //       // return error invalid message id
+  //       return #err("Invalid message Id")
+  //     };
+  //   };
+  // };
 
-  public query func getAllComment(messageId : Nat) : async Result.Result<[Comment], Text> {
+  public query func getAllComment(messageId : Nat) : async Result.Result<[Response.Comment], Text> {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?msg) {  
-        return #ok(msg.comments)
+        let commBuff = Buffer.fromArray<Comment>(msg.comments);
+        let resComm = Buffer.Buffer<Response.Comment>(1);
+        var index : Nat = 0;
+        for(item in msg.comments.vals()) {
+          let u = _User.getUser(userHash, msg.creator);
+          switch(u) {
+            case(?u) {  
+              resComm.add({id = index; comment = item; creator = u})
+            };
+            case(_) { };
+          };
+          index += 1;
+        };
+        return #ok(Buffer.toArray(resComm));
       };
       case(_) { 
         return #err("Message with id " # Nat.toText(messageId) #  " does not exist.");

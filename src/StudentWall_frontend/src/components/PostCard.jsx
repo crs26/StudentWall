@@ -130,11 +130,11 @@ export default function PostCard ({ id }) {
       <div className='px-2 mx-1'>
         <div className='row post-card my-3 justify-content-center'>
           <div className='col-3 col-md-1'>
-            <div className='col my-auto'>
+            <div className='col my-auto text-center'>
               <div>
                 <img src={user.image || '/user.png'} className='user-img my-auto' />
               </div>
-              <p>{user.name}</p>
+              <p className='m-0'>{user.name}</p>
               <p>{shortPrincipal(user.principal)}</p>
             </div>
           </div>

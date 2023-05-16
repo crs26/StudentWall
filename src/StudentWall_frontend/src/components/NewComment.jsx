@@ -4,7 +4,7 @@ import { useAuth } from '../helpers/use-auth-client'
 
 export default function NewComment ({ postId, update }) {
   const inText = useRef()
-  const { whoamiActor } = useAuth()
+  const { whoamiActor, user } = useAuth()
 
   const addComment = () => {
     whoamiActor.writeComment(inText.current.value, postId).then((e) => {
@@ -22,7 +22,7 @@ export default function NewComment ({ postId, update }) {
     <div className='d-md-flex post-card my-3'>
       <div className='d-flex w-100 justify-content-between'>
         <div className='col-1 m-auto d-flex'>
-          <img src='/user.png' className='user-img m-auto' />
+          <img src={user.image || '/user.png'} className='user-img m-auto' />
         </div>
         <div className='col-11 d-grid form-inputs'>
           <textarea

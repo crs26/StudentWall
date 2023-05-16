@@ -14,7 +14,7 @@ export const Comment = (props) => {
   const [editComment, setEditComment] = useState({})
   const { messageId } = useParams()
   const numId = parseInt(messageId)
-  const { whoamiActor, principal } = useAuth()
+  const { whoamiActor, principal, user } = useAuth()
   const [showModal, setShowModal] = useState(false)
   const newCommref = useRef(null)
 
@@ -103,12 +103,16 @@ export const Comment = (props) => {
         : ''}
       <PostCard id={numId} setEditPost={setEditPost} editPost={editPost} update={update} />
       {comments?.ok?.map((comment, id) => {
-        console.log(comment);
         return (
           <div key={id} className='my-2 px-2 mx-1'>
             <div className='row post-card justify-content-center'>
               <div className='col-8 d-flex gap-3'>
-                <img src='/user.png' className='user-img my-auto' />
+                <img src={user.image || '/user.png'} className='user-img my-auto' />
+                <div className='text-light'>
+                  {user.name}
+                  <br />
+                  {user.principalShort}
+                </div>
                 <div className='my-auto'>
                   <p className='m-0'>
                     {comment?.text}

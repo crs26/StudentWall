@@ -60,10 +60,11 @@ export const Comment = (props) => {
       return (
         <div className='col-1' id={id}>
           <div className='col-1 my-1'>
-            <BiPencil onClick={() => {
-              setEditComment({ id, text })
-              setShowModal(true)
-            }}
+            <BiPencil
+              onClick={() => {
+                setEditComment({ id, text })
+                setShowModal(true)
+              }}
               className='text-white'
             />
           </div>

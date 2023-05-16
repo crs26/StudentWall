@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { toast } from 'react-toastify'
 import { useAuth } from '../helpers/use-auth-client'
 
-export default function NewComment({ postId, update }) {
+export default function NewComment ({ postId, update }) {
   const inText = useRef()
   const { whoamiActor, user } = useAuth()
 

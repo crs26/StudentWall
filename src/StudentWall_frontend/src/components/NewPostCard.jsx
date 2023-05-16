@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../helpers/use-auth-client'
 import { toast } from 'react-toastify'
+import { BsFillImageFill } from 'react-icons/bs'
 
-export default function NewPostCard ({ subject, body, edit, id, setEditPost, update, setData }) {
+export default function NewPostCard({ subject, body, edit, id, setEditPost, update, setData }) {
   const { whoamiActor } = useAuth()
   const [userImg, setUserImg] = useState(null)
   const [previewImage, setPreviewImage] = useState(null)
@@ -114,20 +115,23 @@ export default function NewPostCard ({ subject, body, edit, id, setEditPost, upd
         <div className='col-10 col-md-11 d-grid form-inputs'>
           <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' onChange={(e) => setPost({ ...post, subject: e.target.value })} value={post?.subject} />
           <img src={previewImage} />
-          <textarea
-            placeholder='Share something on your mind'
-            value={post?.text}
-            onChange={(e) => {
-              setPost({ ...post, text: e.target.value })
-            }}
-          />
-          <div className='row'>
-            <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
-              <label htmlFor='file-input' className='btn btn-primary'>
-                Image
+          <div className='post-body'>
+            <textarea
+              className='w-100'
+              placeholder='Share something on your mind'
+              value={post?.text}
+              onChange={(e) => {
+                setPost({ ...post, text: e.target.value })
+              }}
+            />
+            <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-start mt-1 d-flex w-100'>
+              <label htmlFor='file-input' className='file-input rounded-3'>
+                <BsFillImageFill />
               </label>
               <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
             </div>
+          </div>
+          <div className='row'>
             <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
               <button className='primary-btn create-post-btn my-md-auto' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
             </div>

@@ -14,7 +14,7 @@ export const Comment = (props) => {
   const [editComment, setEditComment] = useState({})
   const { messageId } = useParams()
   const numId = parseInt(messageId)
-  const { whoamiActor, principal } = useAuth()
+  const { whoamiActor, principal, user } = useAuth()
   const [showModal, setShowModal] = useState(false)
   const newCommref = useRef(null)
 
@@ -58,17 +58,17 @@ export const Comment = (props) => {
   const renderOwnerAction = (creator, id, text) => {
     if (creator === principal.toString()) {
       return (
-        <div className='col-4' id={id}>
-          <div className='col-1'>
+        <div className='col-1' id={id}>
+          <div className='col-1 my-1'>
             <BiPencil onClick={() => {
               setEditComment({ id, text })
               setShowModal(true)
             }}
+              className='text-white'
             />
           </div>
-
-          <div className='col-1'>
-            <BiTrash onClick={() => deleteComment(id)} />
+          <div className='col-1 my-1'>
+            <BiTrash onClick={() => deleteComment(id)} className='text-white' />
           </div>
         </div>
       )
@@ -85,10 +85,10 @@ export const Comment = (props) => {
           </button>
         </Modal.Header>
         <Modal.Body>
-          <input type='text' defaultValue={editComment.text} ref={newCommref} />
+          <input type='text' className='form-control comment-edit-input-area' defaultValue={editComment.text} ref={newCommref} />
         </Modal.Body>
         <Modal.Footer>
-          <button onClick={() => updateComment()}>Update Comment</button>
+          <button onClick={() => updateComment()} className='primary-btn'>Update Comment</button>
         </Modal.Footer>
       </Modal>
     )
@@ -105,15 +105,20 @@ export const Comment = (props) => {
       {comments?.ok?.map((comment, id) => {
         return (
           <div key={id} className='my-2 px-2 mx-1'>
-            <div className='row post-card justify-content-center'>
-              <div className='col-8 d-flex gap-3'>
-                <img src='/user.png' className='user-img my-auto' />
-                <div className='my-auto'>
+            <div className='row post-card justify-content-center px-4'>
+              <div className='col-11 d-flex p-0'>
+                <div className='col-2 m-auto text-center'>
+                  <img src={user.image || '/user.png'} className='d-flex user-img mx-auto' />
+                  <p>{user.name}</p>
+                </div>
+                <div className='my-auto col-10'>
                   <p className='m-0'>
                     {comment?.text}
                   </p>
                   <p className='m-0'>
-                    {comment?.creator.toString()}
+                    <i>
+                      {comment?.creator.toString()}
+                    </i>
                   </p>
                 </div>
               </div>

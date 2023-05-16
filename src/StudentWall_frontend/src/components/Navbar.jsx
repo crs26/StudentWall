@@ -18,7 +18,7 @@ export const Navbar = () => {
     }
   }, [])
 
-  function NavLink ({ to, children, ...props }) {
+  function NavLink({ to, children, ...props }) {
     const resolvedPath = useResolvedPath(to)
     const isActive = useMatch({ path: resolvedPath.pathname, end: true })
     return (
@@ -33,7 +33,7 @@ export const Navbar = () => {
   return (
     <nav className='navbar navbar-expand-lg'>
       <div className='container d-flex justify-content-between'>
-        <div className='d-flex col-md-4'>
+        <div className='col-md-4'>
           <Link to='/' className='nav-brand d-flex'>
             {/* <img src='/logo2.png' className='nav-logo' /> */}
             {/* <span> */}
@@ -41,14 +41,17 @@ export const Navbar = () => {
             {/* </span> */}
           </Link>
         </div>
+        <div className='col-4 mx-auto d-flex justify-content-center'>
+          <img src='/logo2-tp.svg' className='img-fluid w-50' />
+        </div>
         <ul className='mobile-nav my-auto'>
           <li className='my-auto d-flex'>
             <GiHamburgerMenu onClick={() => { setShowNav(!showNav) }} />
           </li>
         </ul>
-        <ul className={`${showNav ? 'col-12 show' : ''} navbar-nav nav-items my-auto justify-content-end`}>
-          <NavLink to='/post'>Post</NavLink>
-          <NavLink to='/message'>Message</NavLink>
+        <ul className={`${showNav ? 'col-12 show' : ''} col-4 navbar-nav nav-items my-auto justify-content-end`}>
+          {/* <NavLink to='/post'>Post</NavLink>
+          <NavLink to='/message'>Message</NavLink> */}
           <Identity />
         </ul>
       </div>

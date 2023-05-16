@@ -68,7 +68,7 @@ export const Comment = (props) => {
               className='text-white'
             />
           </div>
-          <div className='col-1 my-1'>
+          <div className='col-1 mx-auto my-1'>
             <BiTrash onClick={() => deleteComment(id)} className='text-white' />
           </div>
         </div>
@@ -105,35 +105,39 @@ export const Comment = (props) => {
       {editPost?.edit
         ? (
           <NewPostCard setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} update={update} />
-          )
+        )
         : ''}
       <PostCard id={numId} setEditPost={setEditPost} editPost={editPost} update={update} />
       {comments?.ok?.map((comment, id) => {
         return (
           <div key={id} className='my-2 px-2 mx-1'>
             <div className='row post-card justify-content-center'>
-              <div className='col-8 d-flex gap-3'>
-                <img src={user.image || '/user.png'} className='user-img my-auto' />
-                <div className='text-light'>
-                  {user.name}
-                  <br />
-                  {user.principalShort}
+              <div className='row gap-3'>
+                <div className='col-12 col-md-12'>
+                  <div className='d-flex gap-2 text-left col my-auto'>
+                    <div className='my-auto'>
+                      <img src={user.image || '/user.png'} className='user-img my-auto' />
+                    </div>
+                    <div className='my-auto'>
+                      <p className='m-0'>{user.name}</p>
+                      <p className='m-0'>{user.principalShort}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className='my-auto'>
-                  <p className='m-0'>
-                    {comment?.text}
-                  </p>
-                  <p className='m-0'>
-                    <i>
-                      {comment?.creator.toString()}
-                    </i>
-                  </p>
+                <div className='justify-content-between d-flex my-auto'>
+                  <div className='px-5 my-auto'>
+                    <p className='m-0'>
+                      <i>
+                        {comment?.text}
+                      </i>
+                    </p>
+                  </div>
+                  {renderOwnerAction(comment.creator.toString(), id, comment.text)}
                 </div>
-                <div className='text-light'>
+                <div className='text-light text-right'>
                   {comment.updatedAt.length ? `Edited: ${Date(parseInt(comment.updatedAt))}` : `Posted: ${Date(parseInt(comment.createdAt))}`}
                 </div>
               </div>
-              {renderOwnerAction(comment.creator.toString(), id, comment.text)}
             </div>
           </div>
         )

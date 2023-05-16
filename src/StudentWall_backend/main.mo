@@ -17,7 +17,7 @@ import _Message "Message";
 import Message "Message";
 import Response "Response";
 import Blob "mo:base/Blob";
-import User "User";
+import _User "User";
 import Time "mo:base/Time";
 
 actor class StudentWall() {
@@ -38,13 +38,12 @@ actor class StudentWall() {
   };
 
   var messageHash = HashMap.HashMap<Nat, Message>(1, Nat.equal, _natHash);
-  var commentHash = HashMap.HashMap<Nat, Comment>(1, Nat.equal, _natHash);
   var userHash = HashMap.HashMap<Principal, User>(1, Principal.equal, Principal.hash);
   var adminBuffer = Buffer.Buffer<Principal>(1);
 
   // Add a new message to the wall
   public shared ({ caller }) func writeMessage(t : Text, c : Content) : async Result.Result<Nat, Text> {
-    let isReg =  User.isRegistered(userHash, caller);
+    let isReg =  _User.isRegistered(userHash, caller);
     if(isReg) {  
       postCount += 1;
       messageHash.put(postCount, {text = t; content = c; creator = caller; vote = 0; comments = []; createdAt = Time.now(); updatedAt = null});
@@ -102,7 +101,7 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.remove(messageId);
     switch(msg) {
       case(?msg) {
-        if (Principal.equal(msg.creator, caller) or User.isAdmin(adminBuffer, caller)) {
+        if (Principal.equal(msg.creator, caller) or _User.isAdmin(adminBuffer, caller)) {
           messageHash.put(messageId, msg);
           return #err("Only the creator itself or an admin can delete the message.");
         } else {
@@ -144,7 +143,15 @@ actor class StudentWall() {
   public query func getAllMessages() : async [Response.Message] {
     var arr  = Buffer.Buffer<Response.Message>(1);
     for ((key, value) in messageHash.entries()) {
-      arr.add({id = key; message = value});
+      let u = _User.getUser(userHash, value.creator);
+      switch(u) {
+        case(?u) {  
+          arr.add({id = key; message = value; creator = u});
+        };
+        case(_) { 
+          // dont add user
+        };
+      };
     };
     arr.sort(func (x : Response.Message, y : Response.Message) {
       return Nat.compare(x.id, y.id);
@@ -158,7 +165,15 @@ actor class StudentWall() {
       case(?user) {
         let buff = Buffer.Buffer<Response.Message>(1);
         for((key, value) in messageHash.entries()) {
-          if(Principal.equal(value.creator, p)) buff.add({id = key; message = value});
+          let u = _User.getUser(userHash, value.creator);
+          switch(u) {
+            case(?u) {  
+              if(Principal.equal(value.creator, p)) buff.add({id = key; message = value; creator = u});
+            };
+            case(_) { 
+              // dont add user
+            };
+          };
         };
         return #ok(Buffer.toArray(buff))
       };
@@ -180,7 +195,15 @@ actor class StudentWall() {
   public query func getAllMessagesRanked() : async [Response.Message] {
     var arr  = Buffer.Buffer<Response.Message>(1);
     for ((key, value) in messageHash.entries()) {
-      arr.add({id=key; message=value});
+      let u = _User.getUser(userHash, value.creator);
+      switch(u) {
+        case(?u) {  
+          arr.add({id = key; message = value; creator = u});
+        };
+        case(_) { 
+          // dont add user
+        };
+      };
     };
     arr.sort(func (x : Response.Message, y : Response.Message) {
       return desc(x.message.vote, y.message.vote);
@@ -190,7 +213,7 @@ actor class StudentWall() {
 
   // Comment functions
   public shared({caller}) func writeComment(t : Text, messageId : Nat) : async (Result.Result<(), Text>) {
-    let isReg : Bool = User.isRegistered(userHash, caller);
+    let isReg : Bool = _User.isRegistered(userHash, caller);
     if(not isReg) return #err("Can't write comment, invalid user.");
     if(Principal.isAnonymous(caller)) return #err("Can't write comment, anonymous user");
     let m = messageHash.get(messageId);
@@ -238,14 +261,16 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?msg) {  
-        messageHash.put(messageId, _Message.removeComment(msg, commentId));
-        let comment : ?Comment =  commentHash.remove(commentId);
+        // let comment : ?Comment =  commentHash.remove(commentId);
+        let commTemp = Buffer.fromArray<Comment>(msg.comments);
+        let comment = commTemp.getOpt(commentId);
         switch(comment) {
           case(?comment) { 
             if (Principal.equal(caller, comment.creator)) {
               return #ok();
             } else {
-              commentHash.put(commentId, comment);
+              ignore commTemp.remove(commentId);
+              messageHash.put(messageId, _Message.removeComment(msg, commentId));
               return #err("Only the creator itself or an admin can delete the comment.")
             }
           };

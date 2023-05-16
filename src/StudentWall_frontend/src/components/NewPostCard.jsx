@@ -21,18 +21,19 @@ export default function NewPostCard ({ update }) {
     if (typeof post?.text !== 'undefined' && typeof post?.subject !== 'undefined') {
       if (imgBlob) {
         whoamiActor.writeMessage(post?.subject, { Image: imgBlob }).then((result) => {
-          if (result.ok) {
+          if (result) {
             console.log('ok')
             toast.success('Post has been created')
             update()
             setPost({ subject: '', text: '' })
+            setImgBlob(null)
           } else {
             toast.error(result.err)
           }
         })
       } else {
         whoamiActor.writeMessage(post?.subject, { Text: post?.text }).then((result) => {
-          if (result.ok) {
+          if (result) {
             console.log('ok 2')
             toast.success('Post has been created')
             update()

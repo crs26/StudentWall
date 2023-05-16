@@ -77,7 +77,12 @@ export const Comment = (props) => {
 
   const renderEditModal = () => {
     return (
-      <Modal show={showModal}>
+      <Modal
+        show={showModal}
+        size='sm'
+        aria-labelledby='contained-modal-title-vcenter'
+        centered
+      >
         <Modal.Header>
           <h5 className='modal-title'>Edit Comment</h5>
           <button type='button' className='primary-btn-danger close' onClick={() => setShowModal(false)}>

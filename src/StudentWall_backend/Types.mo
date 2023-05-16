@@ -11,7 +11,7 @@ module {
     content : Content;
     vote : Int;
     creator : Principal;
-    comments : [Nat]
+    comments : [Comment]
   };
 
   public type Comment = {

@@ -27,10 +27,10 @@ actor class StudentWall() {
   type User = Type.User;
   type Comment = Type.Comment;
 
-  stable var enReg : Bool = true;
-  stable var enMod : Bool = false;
-  stable var postCount : Nat = 0;
-  stable var commCount : Nat = 0;
+  var enReg : Bool = true;
+  var enMod : Bool = false;
+  var postCount : Nat = 0;
+  var commCount : Nat = 0;
 
   func _natHash(n : Nat) : (Nat32) {
     Text.hash(Nat.toText(n));
@@ -181,7 +181,7 @@ actor class StudentWall() {
       case(?m) {  
         commCount += 1;
         commentHash.put(commCount, {text = t; creator = caller});
-        messageHash.put(messageId, _Message.addComment(m, commCount));
+        messageHash.put(messageId, _Message.addComment(m, {creator = caller; text = t}));
         return #ok();
       };
       case(_) { 
@@ -195,11 +195,13 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?msg) {  
-        let c = commentHash.get(commentId);
+        let tempComm = Buffer.fromArray<Comment>(msg.comments);
+        let c = tempComm.getOpt(commentId);
         switch(c) {
           case(?c) {  
             if(Principal.equal(c.creator, caller)) {
-              commentHash.put(commentId,{creator = caller; text=comment});
+              tempComm.put(commentId, {creator = caller; text=comment});
+              messageHash.put(messageId, {comments = Buffer.toArray(tempComm); content = msg.content; creator = msg.creator; text = msg.text; vote = msg.vote});
               return #ok()
             } else {
               return #err("Only the creator itself or an admin can delete this comment.")
@@ -247,19 +249,7 @@ actor class StudentWall() {
     var commBuff = Buffer.Buffer<Comment>(1);
     switch(msg) {
       case(?msg) {  
-        let commArr : [Nat] = msg.comments;
-        for(item in commArr.vals()) {
-          let comment : ?Comment = commentHash.get(item);
-          switch(comment) {
-            case(?comment) {  
-              commBuff.add(comment); 
-            };
-            case(_) { 
-              // return error invalid comment id
-            };
-          };
-        };
-        return #ok(Buffer.toArray(commBuff));
+        return #ok(msg.comments)
       };
       case(_) { 
         // return error invalid message id
@@ -268,29 +258,14 @@ actor class StudentWall() {
     };
   };
 
-  public query func getAllComment(messageId : Nat) : async Result.Result<[Response.Comment], Text> {
+  public query func getAllComment(messageId : Nat) : async Result.Result<[Comment], Text> {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?msg) {  
-        var commList = Buffer.Buffer<Response.Comment>(1);
-        for(item in msg.comments.vals()) {
-          let comm = commentHash.get(item);
-          switch(comm) {
-            case(?comm) {  
-              commList.add({id = item; comment = comm});
-            };
-            case(_) { 
-              // return #err("Comment with id " # Nat.toText(item) #  "does not exist.");
-            };
-          };
-        };
-        commList.sort(func (x : Response.Comment, y : Response.Comment) {
-          return Nat.compare(x.id, y.id);
-        });
-        return #ok(Buffer.toArray(commList))
+        return #ok(msg.comments)
       };
       case(_) { 
-        return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
+        return #err("Message with id " # Nat.toText(messageId) #  " does not exist.");
       };
     };
   };

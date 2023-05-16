@@ -2,13 +2,13 @@ import React from 'react'
 import { useAuth } from './use-auth-client'
 import { ImInfinite } from 'react-icons/im'
 import { CgLogOut } from 'react-icons/cg'
-// import { Link } from '../../../../node_modules/react-router-dom/dist/index'
+import { Link } from '../../../../node_modules/react-router-dom/dist/index'
 
-function LoggedIn() {
+function LoggedIn({ cusClass }) {
   const { logout, login, isAuthenticated, user } = useAuth()
 
   return (
-    <div className='col d-flex justify-content-end my-auto identity-btn'>
+    <div className={`col d-flex justify-content-end my-auto identity-btn ${cusClass}`}>
       {!isAuthenticated
         ? (
           <button onClick={login} className='primary-btn d-flex mx-auto'>
@@ -20,10 +20,10 @@ function LoggedIn() {
         )
         : (
           <div>
-            {/* {user.principal ? '' :
-              <Link href='/login' className='primary-btn'>Register</Link>
-            } */}
-            <button onClick={logout} className='d-flex mx-auto primary-btn'><CgLogOut className='my-auto' /> <span className='my-auto ms-2'>Logout</span></button>
+            {user.principal ?
+              <button onClick={logout} className='d-flex mx-auto primary-btn'><CgLogOut className='my-auto' /> <span className='my-auto ms-2'>Logout</span></button> :
+              <Link to='/login' className='primary-btn py-2'>Register</Link>
+            }
           </div>
         )}
     </div>

@@ -84,7 +84,7 @@ export const useAuthClient = (options = defaultOptions) => {
     setWhoamiActor(actor)
     actor.getUser([principal]).then((e) => {
       if (e.err) {
-        toast.error(e.err)
+        toast.error(e.err + ' Please login')
       } else {
         const blob = new global.Blob([e.ok.image], { type: 'image/jpeg' })
         const urlCreator = window.URL || window.webkitURL

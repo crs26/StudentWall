@@ -68,10 +68,6 @@ export default function PostCard ({ id }) {
     })
   }
 
-  const shortPrincipal = (p) => {
-    if (p) return `${p.substring(0, 5)}...${p.substring(p.length - 3)}`
-  }
-
   const renderContent = () => {
     if (post?.content?.Text) {
       return (
@@ -135,7 +131,7 @@ export default function PostCard ({ id }) {
                 <img src={user.image || '/user.png'} className='user-img my-auto' />
               </div>
               <p>{user.name}</p>
-              <p>{shortPrincipal(user.principal)}</p>
+              <Link to={'/user/messages/' + user.principal}>{user.principalShort}</Link>
             </div>
           </div>
           <div className='col-12 col-md-11'>

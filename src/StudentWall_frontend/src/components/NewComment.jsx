@@ -1,14 +1,20 @@
 import React, { useRef } from 'react'
-import { StudentWall_backend as backend } from '../../../declarations/StudentWall_backend'
 import { toast } from 'react-toastify'
+import { useAuth } from '../helpers/use-auth-client'
 
 export default function NewComment ({ postId, update }) {
   const inText = useRef()
+  const { whoamiActor } = useAuth()
 
-  const addComment = async () => {
-    backend.writeComment(inText.current.value, postId).then(() => {
-      update()
-      toast('Comment added')
+  const addComment = () => {
+    whoamiActor.writeComment(inText.current.value, postId).then((e) => {
+      console.log(e)
+      if (!e.err) {
+        update()
+        toast.success('Comment added')
+      } else {
+        toast.error(e.rr)
+      }
     })
   }
 

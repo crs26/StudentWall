@@ -18,7 +18,7 @@ export const App = () => {
         <Route path='/' element={<Post />} />
         <Route path='/post' element={<Post />} />
         <Route path='/message' element={<Message />} />
-        <Route path='/comment/:id' element={<Comment />} />
+        <Route path='/comment/:messageId' element={<Comment />} />
         <Route path='/login' element={<LoginPage />} />
       </Routes>
     </>

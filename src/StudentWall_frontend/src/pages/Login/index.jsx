@@ -4,7 +4,7 @@ import { useAuth } from '../../helpers/use-auth-client'
 import { toast } from 'react-toastify'
 
 export const LoginPage = () => {
-  const { isAuthenticated, whoamiActor, principal } = useAuth()
+  const { isAuthenticated, whoamiActor, principal, user } = useAuth()
   const [previewImage, setPreviewImage] = useState(null)
   const [imgBlob, setImgBlob] = useState(null)
   const MAX_FILE_SIZE = 1048576
@@ -72,7 +72,7 @@ export const LoginPage = () => {
               </div>
             </div>
             <div className='row'>
-              <Identity />
+              <Identity cusClass={`${user.principal ? '' : 'd-none'}`} />
             </div>
           </div>
           <div className='card-footer'>

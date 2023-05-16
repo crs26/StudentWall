@@ -152,6 +152,22 @@ actor class StudentWall() {
     return Buffer.toArray(arr);
   };
 
+  public query func getAllUserMessage(p : Principal) : async Result.Result<[Response.Message], Text> {
+    let user : ?User = userHash.get(p);
+    switch(user) {
+      case(?user) {
+        let buff = Buffer.Buffer<Response.Message>(1);
+        for((key, value) in messageHash.entries()) {
+          if(Principal.equal(value.creator, p)) buff.add({id = key; message = value});
+        };
+        return #ok(Buffer.toArray(buff))
+      };
+      case(_) { 
+        return #err("User not found or invalid.")
+      };
+    };
+  };
+
   // Get all messages ordered by votes
   func desc(x:Int, y:Int) : { #less; #equal; #greater } {
     switch(Int.compare(x,y)) {

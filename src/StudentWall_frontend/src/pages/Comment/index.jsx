@@ -59,11 +59,12 @@ export const Comment = (props) => {
     if (creator === principal.toString()) {
       return (
         <div className='col-1' id={id}>
-          <div className='col-1 my-1 mx-auto'>
-            <BiPencil onClick={() => {
-              setEditComment({ id, text })
-              setShowModal(true)
-            }}
+          <div className='col-1 my-1'>
+            <BiPencil
+              onClick={() => {
+                setEditComment({ id, text })
+                setShowModal(true)
+              }}
               className='text-white'
             />
           </div>

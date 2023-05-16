@@ -8,6 +8,7 @@ import { Navbar } from './components/Navbar'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { LoginPage } from './pages/Login/index'
+import { UserMessages } from './pages/User/Messages'
 
 export const App = () => {
   return (
@@ -18,8 +19,10 @@ export const App = () => {
         <Route path='/' element={<Post />} />
         <Route path='/post' element={<Post />} />
         <Route path='/message' element={<Message />} />
+        <Route path='/user/messages/:p' element={<UserMessages />} />
         <Route path='/comment/:messageId' element={<Comment />} />
         <Route path='/login' element={<LoginPage />} />
+        <Route path='*' element={<div className='text-light'>404</div>} />
       </Routes>
     </>
   )

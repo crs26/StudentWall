@@ -7,7 +7,7 @@ function LoggedIn () {
   const { logout, login, isAuthenticated } = useAuth()
 
   return (
-    <div className='col my-auto identity-btn'>
+    <div className='col d-flex justify-content-end my-auto identity-btn'>
       {!isAuthenticated
         ? (
           <button onClick={login} className='primary-btn d-flex mx-auto'>

@@ -83,7 +83,7 @@ p {
 
 .user-img {
     width: 4.0em;
-    height: auto;
+    height: 4.0em;
     border-radius: 50%;
 }
 
@@ -92,6 +92,15 @@ p {
     border-radius: 10px;
     justify-content: space-between !important;
     background: #262D34;
+}
+
+.post-body {
+    background-color: #2C353D;
+    border-radius: 10px;
+}
+
+.file-input svg {
+    border-radius: 10px !important;
 }
 
 .form-inputs {

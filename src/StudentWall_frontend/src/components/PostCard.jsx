@@ -62,16 +62,20 @@ export default function PostCard ({ id }) {
 
   const getUpdatedMessage = async (id) => {
     backend.getMessage(id).then(m => {
-      setPost(m.ok)
-      backend.getUser([m.ok.creator]).then((e) => {
-        if (e?.ok) {
-          const blob = new global.Blob([e.ok.image], { type: 'image/jpeg' })
-          const urlCreator = window.URL || window.webkitURL
-          const url = urlCreator.createObjectURL(blob)
-          setUserImg(url)
-          setUserName(e.ok.name)
-        }
-      })
+      if (m.err) {
+        toast.error(m.err)
+      } else {
+        setPost(m.ok)
+        backend.getUser([m.ok.creator]).then((e) => {
+          if (e?.ok) {
+            const blob = new global.Blob([e.ok.image], { type: 'image/jpeg' })
+            const urlCreator = window.URL || window.webkitURL
+            const url = urlCreator.createObjectURL(blob)
+            setUserImg(url)
+            setUserName(e.ok.name)
+          }
+        })
+      }
     })
   }
 

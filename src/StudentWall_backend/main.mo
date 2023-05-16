@@ -91,7 +91,7 @@ actor class StudentWall() {
         return #err("Only the owner can update the content");
       };
       case(_) { 
-        return #err("Message with id " # Nat.toText(messageId) #  "does not exist.")
+        return #err("Message with id " # Nat.toText(messageId) #  " does not exist.")
       };
     };
   };
@@ -173,6 +173,9 @@ actor class StudentWall() {
 
   // Comment functions
   public shared({caller}) func writeComment(t : Text, messageId : Nat) : async (Result.Result<(), Text>) {
+    let isReg : Bool = User.isRegistered(userHash, caller);
+    if(not isReg) return #err("Can't write comment, invalid user.");
+    if(Principal.isAnonymous(caller)) return #err("Can't write comment, anonymous user");
     let m = messageHash.get(messageId);
     switch(m) {
       case(?m) {  
@@ -188,14 +191,54 @@ actor class StudentWall() {
     };
   };
 
-  public func deleteComment(commentId : Nat, messageId : Nat) : async () {
+  public shared({caller}) func updateComment(messageId : Nat, commentId : Nat, comment : Text) : async Result.Result<(), Text> {
+    let msg : ?Message = messageHash.get(messageId);
+    switch(msg) {
+      case(?msg) {  
+        let c = commentHash.get(commentId);
+        switch(c) {
+          case(?c) {  
+            if(Principal.equal(c.creator, caller)) {
+              commentHash.put(commentId,{creator = caller; text=comment});
+              return #ok()
+            } else {
+              return #err("Only the creator itself or an admin can delete this comment.")
+            }
+          };
+          case(_) { 
+            return #err("Comment not found or invalid id.")
+          };
+        };
+      };
+      case(_) { 
+        return #err("Message not found or invalid id.")
+      };
+    };
+  };
+
+  public shared({caller}) func deleteComment(commentId : Nat, messageId : Nat) : async (Result.Result<(), Text>) {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?msg) {  
         messageHash.put(messageId, _Message.removeComment(msg, commentId));
-        ignore commentHash.remove(commentId);
+        let comment : ?Comment =  commentHash.remove(commentId);
+        switch(comment) {
+          case(?comment) { 
+            if (Principal.equal(caller, comment.creator)) {
+              return #ok();
+            } else {
+              commentHash.put(commentId, comment);
+              return #err("Only the creator itself or an admin can delete the comment.")
+            }
+          };
+          case(_) { 
+            return #err("Invalid comment id.")
+          };
+        };
       };
-      case(_) { };
+      case(_) { 
+        return #err("Invalid message id.");
+      };
     };
   };
 

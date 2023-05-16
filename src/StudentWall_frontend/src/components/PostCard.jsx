@@ -148,7 +148,7 @@ export default function PostCard ({ id }) {
               </div>
               <hr className='text-light' />
               <div className='row text-white d-flex justify-content-end'>
-                <div>
+                <div className='row justify-content-end mb-3'>
                   {post.updatedAt.length ? `Edited: ${Date(parseInt(post.updatedAt))}` : `Posted: ${Date(parseInt(post.createdAt))}`}
                 </div>
                 <div className='col-4 my-auto'>

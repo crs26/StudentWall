@@ -1,6 +1,7 @@
 import { AuthClient } from '@dfinity/auth-client'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { canisterId, createActor } from '../../../declarations/StudentWall_backend'
+import { toast } from 'react-toastify'
 
 const AuthContext = createContext()
 
@@ -38,6 +39,7 @@ export const useAuthClient = (options = defaultOptions) => {
   const [identity, setIdentity] = useState(null)
   const [principal, setPrincipal] = useState(null)
   const [whoamiActor, setWhoamiActor] = useState(null)
+  const [user, setUser] = useState({})
 
   useEffect(() => {
     // Initialize AuthClient
@@ -80,6 +82,17 @@ export const useAuthClient = (options = defaultOptions) => {
     console.log(actor)
 
     setWhoamiActor(actor)
+    actor.getUser([principal]).then((e) => {
+      if (e.err) {
+        toast.error(e.err)
+      } else {
+        const blob = new global.Blob([e.ok.image], { type: 'image/jpeg' })
+        const urlCreator = window.URL || window.webkitURL
+        const url = urlCreator.createObjectURL(blob)
+        console.log(url)
+        setUser({ image: url, name: e.ok.name, allowMsg: e.ok.allowMsg, principal: principal.toString() })
+      }
+    })
   }
 
   async function logout () {
@@ -94,7 +107,8 @@ export const useAuthClient = (options = defaultOptions) => {
     authClient,
     identity,
     principal,
-    whoamiActor
+    whoamiActor,
+    user
   }
 }
 

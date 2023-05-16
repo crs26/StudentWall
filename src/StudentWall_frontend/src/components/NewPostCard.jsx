@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useAuth } from '../helpers/use-auth-client'
 import { toast } from 'react-toastify'
 
 export default function NewPostCard ({ update }) {
-  const { whoamiActor, principal } = useAuth()
-  const [userImg, setUserImg] = useState(null)
-  const [userName, setUserName] = useState('')
+  const { whoamiActor, user } = useAuth()
   const [previewImage, setPreviewImage] = useState(null)
   const [imgBlob, setImgBlob] = useState(null)
   const MAX_FILE_SIZE = 1048576
@@ -17,18 +15,6 @@ export default function NewPostCard ({ update }) {
     message: '',
     status: false
   })
-
-  useEffect(() => {
-    whoamiActor?.getUser([]).then((e) => {
-      if (e?.ok) {
-        const blob = new global.Blob([e.ok.image], { type: 'image/jpeg' })
-        const urlCreator = window.URL || window.webkitURL
-        const url = urlCreator.createObjectURL(blob)
-        setUserImg(url)
-        setUserName(e.ok.name)
-      }
-    })
-  }, [whoamiActor])
 
   const createPost = () => {
     if (typeof post?.text !== 'undefined' && typeof post?.subject !== 'undefined') {
@@ -110,9 +96,9 @@ export default function NewPostCard ({ update }) {
     <div className='d-md-flex post-card my-3'>
       <div className='d-flex w-100 justify-content-between justify-content-md-start'>
         <div className='col-1 mx-auto'>
-          <img src={userImg || '/user.png'} className='d-flex user-img mx-auto' />
-          <p>{userName}</p>
-          <p>{shortPrincipal(principal?.toString())}</p>
+          <img src={user.image || '/user.png'} className='d-flex user-img mx-auto' />
+          <p>{user.name}</p>
+          <p>{shortPrincipal(user.principal)}</p>
         </div>
         <div className='col-10 col-md-11 d-grid form-inputs'>
           <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' onChange={(e) => setPost({ ...post, subject: e.target.value })} value={post?.subject} />

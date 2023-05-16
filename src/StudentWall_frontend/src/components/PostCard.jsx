@@ -11,10 +11,8 @@ export default function PostCard ({ id }) {
     getUpdatedMessage(id)
   }, [])
 
-  const [userImg, setUserImg] = useState(null)
-  const [userName, setUserName] = useState('')
+  const { principal, whoamiActor, user } = useAuth()
   const [post, setPost] = useState(null)
-  const { principal, whoamiActor } = useAuth()
   const [showModal, setShowModal] = useState(false)
   const [postEdit, setPostEdit] = useState(null)
 
@@ -66,15 +64,6 @@ export default function PostCard ({ id }) {
         toast.error(m.err)
       } else {
         setPost(m.ok)
-        backend.getUser([m.ok.creator]).then((e) => {
-          if (e?.ok) {
-            const blob = new global.Blob([e.ok.image], { type: 'image/jpeg' })
-            const urlCreator = window.URL || window.webkitURL
-            const url = urlCreator.createObjectURL(blob)
-            setUserImg(url)
-            setUserName(e.ok.name)
-          }
-        })
       }
     })
   }
@@ -112,7 +101,7 @@ export default function PostCard ({ id }) {
             <div className='d-md-flex post-card my-3'>
               <div className='d-flex w-100 justify-content-between justify-content-md-start'>
                 <div className='col-1 mx-auto'>
-                  <img src={userImg || '/user.png'} className='d-flex user-img mx-auto' />
+                  <img src={user.image || '/user.png'} className='d-flex user-img mx-auto' />
                 </div>
                 <div className='col-10 col-md-11 d-grid form-inputs'>
                   <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' defaultValue={postEdit?.text} onChange={(e) => setPostEdit({ ...postEdit, text: e.target.value })} />
@@ -141,10 +130,10 @@ export default function PostCard ({ id }) {
           <div className='col-3 col-md-1'>
             <div className='col my-auto'>
               <div className='row'>
-                <img src={userImg || '/user.png'} className='user-img my-auto' />
+                <img src={user.image || '/user.png'} className='user-img my-auto' />
               </div>
-              <p>{userName}</p>
-              <p>{shortPrincipal(principal?.toString())}</p>
+              <p>{user.name}</p>
+              <p>{shortPrincipal(user.principal)}</p>
             </div>
           </div>
           <div className='col-12 col-md-11'>

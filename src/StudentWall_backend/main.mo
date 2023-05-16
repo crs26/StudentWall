@@ -279,7 +279,7 @@ actor class StudentWall() {
     return #ok();
   };
 
-  public shared({caller}) func getUser(p : ?Principal) : async Result.Result<User, Text> {
+  public query func getUser(p : ?Principal) : async Result.Result<User, Text> {
     switch(p) {
       case(?p) {  
         let u : ?User = userHash.get(p);
@@ -293,15 +293,7 @@ actor class StudentWall() {
         };
       };
       case(_) { 
-        let u : ?User = userHash.get(caller);
-        switch(u) {
-          case(?u) {  
-            return #ok(u)
-          };
-          case(_) { 
-            return #err("User not found")
-          };
-        };
+        return #err("Missing principal.")
       };
     };
   };

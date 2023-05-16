@@ -4,7 +4,7 @@ import { ImInfinite } from 'react-icons/im'
 import { CgLogOut } from 'react-icons/cg'
 import { Link } from '../../../../node_modules/react-router-dom/dist/index'
 
-function LoggedIn({ cusClass }) {
+function LoggedIn ({ cusClass }) {
   const { logout, login, isAuthenticated, user } = useAuth()
 
   return (
@@ -17,15 +17,14 @@ function LoggedIn({ cusClass }) {
               Login with Internet Identity
             </span>
           </button>
-        )
+          )
         : (
           <div>
-            {user.principal ?
-              <button onClick={logout} className='d-flex mx-auto primary-btn'><CgLogOut className='my-auto' /> <span className='my-auto ms-2'>Logout</span></button> :
-              <Link to='/login' className='primary-btn py-2'>Register</Link>
-            }
+            {user.principal
+              ? <button onClick={logout} className='d-flex mx-auto primary-btn'><CgLogOut className='my-auto' /> <span className='my-auto ms-2'>Logout</span></button>
+              : <Link to='/login' className='primary-btn py-2'>Register</Link>}
           </div>
-        )}
+          )}
     </div>
   )
 }

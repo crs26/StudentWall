@@ -11,7 +11,7 @@ export default function PostCard ({ id }) {
     getUpdatedMessage(id)
   }, [])
 
-  const { principal, whoamiActor, user } = useAuth()
+  const { principal, whoamiActor } = useAuth()
   const [post, setPost] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [postEdit, setPostEdit] = useState(null)
@@ -63,18 +63,19 @@ export default function PostCard ({ id }) {
       if (m.err) {
         toast.error(m.err)
       } else {
+        console.log(m.ok)
         setPost(m.ok)
       }
     })
   }
 
   const renderContent = () => {
-    if (post?.content?.Text) {
+    if (post?.message.content?.Text) {
       return (
-        <p>{post.content.Text}</p>
+        <p>{post.message.content.Text}</p>
       )
     } else {
-      const blob = new global.Blob([post?.content?.Image], { type: 'image/jpeg' })
+      const blob = new global.Blob([post?.message.content?.Image], { type: 'image/jpeg' })
       const urlCreator = window.URL || window.webkitURL
       const url = urlCreator.createObjectURL(blob)
       return (
@@ -119,8 +120,18 @@ export default function PostCard ({ id }) {
     )
   }
 
-  if (!post) return ''
+  const shortPrincipal = (p) => {
+    if (p) return `${p.substring(0, 5)}...${p.substring(p.length - 3)}`
+  }
 
+  const toImage = (b) => {
+    const blob = new global.Blob([b], { type: 'image/jpeg' })
+    const urlCreator = window.URL || window.webkitURL
+    return urlCreator.createObjectURL(blob)
+  }
+
+  if (!post) return ''
+  console.log(post)
   return (
     <>
       <div className='px-2 mx-1'>
@@ -128,10 +139,10 @@ export default function PostCard ({ id }) {
           <div className='col-12 col-md-12'>
             <div className='d-flex gap-2 text-left col my-auto'>
               <div className='my-auto'>
-                <img src={user.image || '/user.png'} className='user-img my-auto' />
+                <img src={toImage(post.creator.image) || '/user.png'} className='user-img my-auto' />
               </div>
-              <p className='m-0'>{user.name}</p>
-              <Link to={'/user/messages/' + user.principal}>{user.principalShort}</Link>
+              <p className='m-0'>{post.creator.name}</p>
+              <Link to={'/user/messages/' + post.message.creator.toString()}>{shortPrincipal(post.message.creator.toString())}</Link>
             </div>
           </div>
           <div className='col-12'>
@@ -145,7 +156,7 @@ export default function PostCard ({ id }) {
               <hr className='text-light' />
               <div className='row text-white d-flex justify-content-end'>
                 <div className='row justify-content-end mb-3'>
-                  {post.updatedAt.length ? `Edited: ${Date(parseInt(post.updatedAt))}` : `Posted: ${Date(parseInt(post.createdAt))}`}
+                  {post.message.updatedAt.length ? `Edited: ${Date(parseInt(post.message.updatedAt))}` : `Posted: ${Date(parseInt(post.message.createdAt))}`}
                 </div>
                 <div className='col-12 col-md-4 my-auto'>
                   <div className='row justify-content-center'>
@@ -158,7 +169,7 @@ export default function PostCard ({ id }) {
                   </div>
                 </div>
 
-                <div className={`col-md-1 col-2 ${post?.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
+                <div className={`col-md-1 col-2 ${post?.message.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
                   <BiPencil onClick={() => {
                     updatePost()
                     setShowModal(true)
@@ -166,7 +177,7 @@ export default function PostCard ({ id }) {
                   />
                 </div>
 
-                <div className={`col-md-1 col-2 ${post?.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
+                <div className={`col-md-1 col-2 ${post?.message.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
                   <BiTrash onClick={() => Number(deletePost(id))} />
                 </div>
                 <div className='col-md-1 col-2 '>

@@ -21,6 +21,7 @@ export const Post = () => {
       <NewPostCard update={update} setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} />
       {
         posts?.map((post) => {
+          console.log(post)
           if (post.id) {
             const numId = BigInt(post.id)
             return <PostCard key={numId} id={numId} />

@@ -20,5 +20,9 @@ module {
 
     public func isAdmin(u : Buffer.Buffer<Principal>, p : Principal) : (Bool) {
         Buffer.contains<Principal>(u, p,Principal.equal);
+    };
+
+    public func getUser(uHash : HashMap.HashMap<Principal, Types.User>, p : Principal) : ?Types.User {
+        let u = uHash.get(p);
     }
 }

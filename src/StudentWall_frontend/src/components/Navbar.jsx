@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useMatch, useResolvedPath } from '../../../../node_modules/react-router-dom/dist/index'
+import { Link } from '../../../../node_modules/react-router-dom/dist/index'
 import Identity from '../helpers/Identity'
 import { GiHamburgerMenu } from 'react-icons/gi'
 
@@ -18,17 +18,17 @@ export const Navbar = () => {
     }
   }, [])
 
-  function NavLink({ to, children, ...props }) {
-    const resolvedPath = useResolvedPath(to)
-    const isActive = useMatch({ path: resolvedPath.pathname, end: true })
-    return (
-      <li className={`nav-item  ${isActive ? 'active' : ''}`}>
-        <Link to={to} {...props}>
-          {children}
-        </Link>
-      </li>
-    )
-  }
+  // function NavLink ({ to, children, ...props }) {
+  //   const resolvedPath = useResolvedPath(to)
+  //   const isActive = useMatch({ path: resolvedPath.pathname, end: true })
+  //   return (
+  //     <li className={`nav-item  ${isActive ? 'active' : ''}`}>
+  //       <Link to={to} {...props}>
+  //         {children}
+  //       </Link>
+  //     </li>
+  //   )
+  // }
 
   return (
     <nav className='navbar navbar-expand-lg'>

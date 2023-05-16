@@ -103,6 +103,7 @@ export const Comment = (props) => {
         : ''}
       <PostCard id={numId} setEditPost={setEditPost} editPost={editPost} update={update} />
       {comments?.ok?.map((comment, id) => {
+        console.log(comment);
         return (
           <div key={id} className='my-2 px-2 mx-1'>
             <div className='row post-card justify-content-center'>
@@ -115,6 +116,9 @@ export const Comment = (props) => {
                   <p className='m-0'>
                     {comment?.creator.toString()}
                   </p>
+                </div>
+                <div className='text-light'>
+                  {comment.updatedAt.length ? `Edited: ${Date(parseInt(comment.updatedAt))}` : `Posted: ${Date(parseInt(comment.createdAt))}`}
                 </div>
               </div>
               {renderOwnerAction(comment.creator.toString(), id, comment.text)}

@@ -18,6 +18,7 @@ import Message "Message";
 import Response "Response";
 import Blob "mo:base/Blob";
 import User "User";
+import Time "mo:base/Time";
 
 actor class StudentWall() {
   type Message = Type.Message;
@@ -46,7 +47,7 @@ actor class StudentWall() {
     let isReg =  User.isRegistered(userHash, caller);
     if(isReg) {  
       postCount += 1;
-      messageHash.put(postCount, {text = t; content = c; creator = caller; vote = 0; comments = []});
+      messageHash.put(postCount, {text = t; content = c; creator = caller; vote = 0; comments = []; createdAt = Time.now(); updatedAt = null});
       return #ok(postCount);
     } else { 
       return #err("Can't post a message, invalid user.") 
@@ -85,7 +86,7 @@ actor class StudentWall() {
       case(?value) {  
         let owner : Bool = Principal.equal(caller, value.creator);
         if (owner) {
-          messageHash.put(messageId, {text = t; content = c; creator = value.creator; vote = value.vote; comments = value.comments});
+          messageHash.put(messageId, {text = t; content = c; creator = value.creator; vote = value.vote; comments = value.comments; createdAt = value.createdAt; updatedAt = ?Time.now()});
           return #ok();
         };
         return #err("Only the owner can update the content");
@@ -119,7 +120,7 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
-        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote + 1; comments = value.comments}));
+        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote + 1; comments = value.comments; createdAt = value.createdAt; updatedAt = value.updatedAt}));
       };
       case(_) {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
@@ -131,7 +132,7 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
-        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote - 1; comments = value.comments}));
+        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote - 1; comments = value.comments; createdAt = value.createdAt; updatedAt = value.updatedAt}));
       };
       case(_) {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
@@ -180,8 +181,7 @@ actor class StudentWall() {
     switch(m) {
       case(?m) {  
         commCount += 1;
-        commentHash.put(commCount, {text = t; creator = caller});
-        messageHash.put(messageId, _Message.addComment(m, {creator = caller; text = t}));
+        messageHash.put(messageId, _Message.addComment(m, {creator = caller; text = t; createdAt = Time.now(); updatedAt = null}));
         return #ok();
       };
       case(_) { 
@@ -200,8 +200,8 @@ actor class StudentWall() {
         switch(c) {
           case(?c) {  
             if(Principal.equal(c.creator, caller)) {
-              tempComm.put(commentId, {creator = caller; text=comment});
-              messageHash.put(messageId, {comments = Buffer.toArray(tempComm); content = msg.content; creator = msg.creator; text = msg.text; vote = msg.vote});
+              tempComm.put(commentId, {creator = caller; text=comment; createdAt = c.createdAt; updatedAt = ?Time.now()});
+              messageHash.put(messageId, {comments = Buffer.toArray(tempComm); content = msg.content; creator = msg.creator; text = msg.text; vote = msg.vote; createdAt = msg.createdAt; updatedAt = msg.updatedAt});
               return #ok()
             } else {
               return #err("Only the creator itself or an admin can delete this comment.")

@@ -19,12 +19,20 @@ export default function NewComment({ postId, update }) {
   }
 
   return (
-    <div className='d-md-flex post-card my-3' style={{ position: 'relative' }}>
-      <div className='d-flex w-100 justify-content-between'>
-        <div className='col-1 m-auto d-flex'>
-          <img src={user.image || '/user.png'} className='user-img m-auto' />
+    <div className='d-md-flex justify-content-center post-card my-3' style={{ position: 'relative' }}>
+      <div className='row w-100 mx-auto justify-content-between'>
+        <div className='col-12 mb-2'>
+          <div className='d-flex gap-2 text-left col my-auto'>
+            <div className='my-auto'>
+              <img src={user.image || '/user.png'} className='user-img my-auto' />
+            </div>
+            <div className='my-auto'>
+              <p className='m-0'>{user.name}</p>
+              <p className='m-0'>{user.principalShort}</p>
+            </div>
+          </div>
         </div>
-        <div className='col-10 d-grid form-inputs'>
+        <div className='col-12 d-grid form-inputs'>
           <textarea
             placeholder='What do you think?'
             className='ms-2 ms-lg-0 mx-md-2'

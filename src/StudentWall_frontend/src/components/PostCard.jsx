@@ -44,7 +44,7 @@ export default function PostCard ({ id }) {
 
   const editPost = () => {
     if (postEdit?.content?.Text) {
-      whoamiActor.updateMessage(id, postEdit?.text, { Text: postEdit?.content?.Text }).then((result) => {
+      whoamiActor.updateMessage(id, postEdit?.subject, { Text: postEdit?.text }).then((result) => {
         getUpdatedMessage(id)
         setShowModal(false)
         toast('Post has been updated')
@@ -102,12 +102,12 @@ export default function PostCard ({ id }) {
           <Modal.Body className='px-5'>
             <div className='d-md-flex post-card my-3'>
               <div className='d-flex w-100 justify-content-between justify-content-md-start'>
-                <div className='col-1 mx-auto'>
-                  <img src={user.image || '/user.png'} className='d-flex user-img mx-auto' />
-                </div>
-                <div className='col-10 col-md-11 d-grid form-inputs'>
-                  <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' defaultValue={postEdit?.text} onChange={(e) => setPostEdit({ ...postEdit, text: e.target.value })} />
-                  {renderContent()}
+                <div className='col-12 d-grid form-inputs'>
+                  <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' defaultValue={postEdit?.text} onChange={(e) => setPostEdit({ ...postEdit, subject: e.target.value })} />
+                  <textarea
+                    name='text' placeholder={post?.content?.Text}
+                    onChange={(e) => setPostEdit({ ...postEdit, text: e.target.value })}
+                  />
                   <div className='mx-auto col-12 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
                     <button className='primary-btn mt-2 my-md-auto' onClick={editPost}>Update Post</button>
                   </div>
@@ -129,17 +129,19 @@ export default function PostCard ({ id }) {
     <>
       <div className='px-2 mx-1'>
         <div className='row post-card my-3 justify-content-center'>
-          <div className='col-3 col-md-1'>
-            <div className='col my-auto text-center'>
-              <div>
+          <div className='col-12 col-md-12'>
+            <div className='d-flex gap-2 text-left col my-auto'>
+              <div className='my-auto'>
                 <img src={user.image || '/user.png'} className='user-img my-auto' />
               </div>
-              <p className='m-0'>{user.name}</p>
-              <p>{shortPrincipal(user.principal)}</p>
+              <div className='my-auto'>
+                <p className='m-0'>{user.name}</p>
+                <p className='m-0'>{shortPrincipal(user.principal)}</p>
+              </div>
             </div>
           </div>
-          <div className='col-12 col-md-11'>
-            <div className='row'>
+          <div className='col-12'>
+            <div className='row justify-content-center'>
               <div className='col-12 my-auto py-4'>
                 <div className='row px-md-5'>
                   <h5>{post?.text}</h5>
@@ -151,8 +153,8 @@ export default function PostCard ({ id }) {
                 <div className='row justify-content-end mb-3'>
                   {post.updatedAt.length ? `Edited: ${Date(parseInt(post.updatedAt))}` : `Posted: ${Date(parseInt(post.createdAt))}`}
                 </div>
-                <div className='col-4 my-auto'>
-                  <div className='row'>
+                <div className='col-12 col-md-4 my-auto'>
+                  <div className='row justify-content-center'>
                     <div className='col-5 text-center post-card-footer'>
                       <p>{Number(post?.vote) > 0 ? Number(post?.vote) : '0'} votes</p>
                     </div>
@@ -162,7 +164,7 @@ export default function PostCard ({ id }) {
                   </div>
                 </div>
 
-                <div className={`col-1 ${post?.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
+                <div className={`col-md-1 col-2 ${post?.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
                   <BiPencil onClick={() => {
                     updatePost()
                     setShowModal(true)
@@ -170,14 +172,14 @@ export default function PostCard ({ id }) {
                   />
                 </div>
 
-                <div className={`col-1 ${post?.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
+                <div className={`col-md-1 col-2 ${post?.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
                   <BiTrash onClick={() => Number(deletePost(id))} />
                 </div>
-                <div className='col-1 '>
+                <div className='col-md-1 col-2 '>
                   <BiUpvote onClick={() => Number(upVote(id))} />
                 </div>
 
-                <div className='col-1 '>
+                <div className='col-md-1 col-2 '>
                   <BiDownvote onClick={() => Number(downVote(id))} />
                 </div>
 

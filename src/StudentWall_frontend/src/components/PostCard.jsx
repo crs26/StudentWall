@@ -130,11 +130,11 @@ export default function PostCard ({ id }) {
       <div className='px-2 mx-1'>
         <div className='row post-card my-3 justify-content-center'>
           <div className='col-3 col-md-1'>
-            <div className='col my-auto'>
+            <div className='col my-auto text-center'>
               <div>
                 <img src={user.image || '/user.png'} className='user-img my-auto' />
               </div>
-              <p>{user.name}</p>
+              <p className='m-0'>{user.name}</p>
               <p>{shortPrincipal(user.principal)}</p>
             </div>
           </div>
@@ -148,7 +148,7 @@ export default function PostCard ({ id }) {
               </div>
               <hr className='text-light' />
               <div className='row text-white d-flex justify-content-end'>
-                <div>
+                <div className='row justify-content-end mb-3'>
                   {post.updatedAt.length ? `Edited: ${Date(parseInt(post.updatedAt))}` : `Posted: ${Date(parseInt(post.createdAt))}`}
                 </div>
                 <div className='col-4 my-auto'>

@@ -3,7 +3,7 @@ import { useAuth } from '../helpers/use-auth-client'
 import { toast } from 'react-toastify'
 import { BsFillImageFill } from 'react-icons/bs'
 
-export default function NewPostCard({ update }) {
+export default function NewPostCard ({ update }) {
   const { whoamiActor, user } = useAuth()
   const [previewImage, setPreviewImage] = useState(null)
   const [imgBlob, setImgBlob] = useState(null)

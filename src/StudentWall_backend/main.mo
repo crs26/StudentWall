@@ -54,11 +54,20 @@ actor class StudentWall() {
   };
 
   // Get a specific message by ID
-  public query func getMessage(messageId : Nat) : async Result.Result<Message, Text> {
+  public query func getMessage(messageId : Nat) : async Result.Result<Response.Message, Text> {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
-        return #ok(value);
+        let u = _User.getUser(userHash, value.creator);
+        switch(u) {
+          case(?u) {  
+            return #ok({id = messageId; message = value; creator = u});
+          };
+          case(_) { 
+            // return #ok({id = messageId; message = value; creator = u});
+            return #err("User is deactivated");
+          };
+        };
       };
       case(_) {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
@@ -67,16 +76,23 @@ actor class StudentWall() {
   };
 
   // Get user messages
-  public shared ({caller}) func getUserMessages() : async Result.Result<[Message], Text>{
-    let buff = Buffer.Buffer<Message>(1);
-    let t = HashMap.mapFilter<Nat, Message, Message>(messageHash, Nat.equal, _natHash, func (k, v) {
-      if(Principal.equal(v.creator, caller)){
-        buff.add(v);
-        return ?v
-      }else return null
-    });
-    return #ok(Buffer.toArray(buff))
-  };
+  // public shared ({caller}) func getUserMessages() : async Result.Result<[Response.Message], Text>{
+  //   let buff = Buffer.Buffer<Response.Message>(1);
+  //   let t = HashMap.mapFilter<Nat, Message, Message>(messageHash, Nat.equal, _natHash, func (k, v) {
+  //     let u = _User.getUser(p);
+  //     switch(u) {
+  //       case(?u) {  
+  //       if(Principal.equal(v.creator, caller)){
+  //         buff.add(v);
+  //         return ?v
+  //       }else return null
+
+  //       };
+  //       case(_) { };
+  //     };
+  //   });
+  //   return #ok(Buffer.toArray(buff))
+  // };
 
   // Update the content for a specific message by ID
   public shared ({ caller }) func updateMessage(messageId : Nat, t : Text, c : Content) : async Result.Result<(), Text> {
@@ -140,24 +156,24 @@ actor class StudentWall() {
   };
 
   // Get all messages
-  public query func getAllMessages() : async [Response.Message] {
-    var arr  = Buffer.Buffer<Response.Message>(1);
-    for ((key, value) in messageHash.entries()) {
-      let u = _User.getUser(userHash, value.creator);
-      switch(u) {
-        case(?u) {  
-          arr.add({id = key; message = value; creator = u});
-        };
-        case(_) { 
-          // dont add user
-        };
-      };
-    };
-    arr.sort(func (x : Response.Message, y : Response.Message) {
-      return Nat.compare(x.id, y.id);
-    });
-    return Buffer.toArray(arr);
-  };
+  // public query func getAllMessages() : async [Response.Message] {
+  //   var arr  = Buffer.Buffer<Response.Message>(1);
+  //   for ((key, value) in messageHash.entries()) {
+  //     let u = _User.getUser(userHash, value.creator);
+  //     switch(u) {
+  //       case(?u) {  
+  //         arr.add({id = key; message = value; creator = u});
+  //       };
+  //       case(_) { 
+  //         // dont add user
+  //       };
+  //     };
+  //   };
+  //   arr.sort(func (x : Response.Message, y : Response.Message) {
+  //     return Nat.compare(x.id, y.id);
+  //   });
+  //   return Buffer.toArray(arr);
+  // };
 
   public query func getAllUserMessage(p : Principal) : async Result.Result<[Response.Message], Text> {
     let user : ?User = userHash.get(p);

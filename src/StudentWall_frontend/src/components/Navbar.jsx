@@ -33,7 +33,7 @@ export const Navbar = () => {
     }
   }, [isAuthtenticated])
 
-  function NavLink({ to, children, ...props }) {
+  function NavLink ({ to, children, ...props }) {
     const resolvedPath = useResolvedPath(to)
     const isActive = useMatch({ path: resolvedPath.pathname, end: true })
     return (

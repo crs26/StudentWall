@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../helpers/use-auth-client'
 import { toast } from 'react-toastify'
 
-export default function NewPostCard ({ subject, body, edit, id, setEditPost, update, setData }) {
-  const { whoamiActor } = useAuth()
+export default function NewPostCard ({ update }) {
+  const { whoamiActor, principal } = useAuth()
   const [userImg, setUserImg] = useState(null)
+  const [userName, setUserName] = useState('')
   const [previewImage, setPreviewImage] = useState(null)
   const [imgBlob, setImgBlob] = useState(null)
   const MAX_FILE_SIZE = 1048576
@@ -18,26 +19,13 @@ export default function NewPostCard ({ subject, body, edit, id, setEditPost, upd
   })
 
   useEffect(() => {
-    setPost({ ...post, subject, text: body })
-  }, [edit])
-
-  useEffect(() => {
-    if (alert.status) {
-      setTimeout(() => {
-        setAlert(false)
-        setPost({ subject: '', text: '' })
-        setEditPost({})
-      }, 2000)
-    }
-  }, [alert.status])
-
-  useEffect(() => {
     whoamiActor?.getUser([]).then((e) => {
       if (e?.ok) {
         const blob = new global.Blob([e.ok.image], { type: 'image/jpeg' })
         const urlCreator = window.URL || window.webkitURL
         const url = urlCreator.createObjectURL(blob)
         setUserImg(url)
+        setUserName(e.ok.name)
       }
     })
   }, [whoamiActor])
@@ -46,40 +34,28 @@ export default function NewPostCard ({ subject, body, edit, id, setEditPost, upd
     if (typeof post?.text !== 'undefined' && typeof post?.subject !== 'undefined') {
       if (imgBlob) {
         whoamiActor.writeMessage(post?.subject, { Image: imgBlob }).then((result) => {
-          toast('Post has been created')
-          update()
-          setPost({ subject: '', text: '' })
+          if (result.ok) {
+            toast.success('Post has been created')
+            update()
+            setPost({ subject: '', text: '' })
+          } else {
+            toast.error(result.err)
+          }
         })
       } else {
         whoamiActor.writeMessage(post?.subject, { Text: post?.text }).then((result) => {
-          toast('Post has been created')
-          update()
-          setPost({ subject: '', text: '' })
+          if (result.ok) {
+            toast.success('Post has been created')
+            update()
+            setPost({ subject: '', text: '' })
+          } else {
+            toast.error(result.err)
+          }
         })
       }
     } else {
-      toast('Cannot create empty post')
+      toast.error('Cannot create empty post')
       setAlert({ ...alert, message: 'Cannot add an empty post!', status: false })
-    }
-  }
-
-  const updatePost = () => {
-    if (subject !== '' && body !== '') {
-      whoamiActor.updateMessage(id, post?.subject, { Text: post?.text }).then((result) => {
-        toast('Post has been updated')
-        update()
-      })
-    } else {
-      toast('Cannot create empty post')
-      setAlert({ ...alert, message: 'Cannot add an empty post!', status: false })
-    }
-  }
-
-  const handlePost = () => {
-    if (!edit) {
-      createPost()
-    } else if (edit) {
-      updatePost()
     }
   }
 
@@ -104,23 +80,43 @@ export default function NewPostCard ({ subject, body, edit, id, setEditPost, upd
     }
   }
 
+  const shortPrincipal = (p) => {
+    if (p) return `${p.substring(0, 5)}...${p.substring(p.length - 3)}`
+  }
+
+  const renderContentArea = () => {
+    if (!imgBlob) {
+      return (
+        <textarea
+          placeholder='Share something on your mind'
+          value={post?.text}
+          onChange={(e) => {
+            setPost({ ...post, text: e.target.value })
+          }}
+        />
+      )
+    } else {
+      return (
+        <>
+          <button className='btn btn-primary' onClick={() => setImgBlob(null)}>x</button>
+          <img src={previewImage} />
+        </>
+      )
+    }
+  }
+
   return (
 
     <div className='d-md-flex post-card my-3'>
       <div className='d-flex w-100 justify-content-between justify-content-md-start'>
         <div className='col-1 mx-auto'>
           <img src={userImg || '/user.png'} className='d-flex user-img mx-auto' />
+          <p>{userName}</p>
+          <p>{shortPrincipal(principal?.toString())}</p>
         </div>
         <div className='col-10 col-md-11 d-grid form-inputs'>
           <input name='subject' type='text' placeholder='Pick a topic' className='mb-2' onChange={(e) => setPost({ ...post, subject: e.target.value })} value={post?.subject} />
-          <img src={previewImage} />
-          <textarea
-            placeholder='Share something on your mind'
-            value={post?.text}
-            onChange={(e) => {
-              setPost({ ...post, text: e.target.value })
-            }}
-          />
+          {renderContentArea()}
           <div className='row'>
             <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
               <label htmlFor='file-input' className='btn btn-primary'>
@@ -129,7 +125,7 @@ export default function NewPostCard ({ subject, body, edit, id, setEditPost, upd
               <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
             </div>
             <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
-              <button className='primary-btn create-post-btn my-md-auto' onClick={handlePost}>{!edit ? 'Create Post' : 'Edit Post'}</button>
+              <button className='primary-btn create-post-btn my-md-auto' onClick={createPost}>Create Post</button>
             </div>
           </div>
         </div>

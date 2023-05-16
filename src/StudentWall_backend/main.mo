@@ -17,6 +17,7 @@ import _Message "Message";
 import Message "Message";
 import Response "Response";
 import Blob "mo:base/Blob";
+import User "User";
 
 actor class StudentWall() {
   type Message = Type.Message;
@@ -38,13 +39,18 @@ actor class StudentWall() {
   var messageHash = HashMap.HashMap<Nat, Message>(1, Nat.equal, _natHash);
   var commentHash = HashMap.HashMap<Nat, Comment>(1, Nat.equal, _natHash);
   var userHash = HashMap.HashMap<Principal, User>(1, Principal.equal, Principal.hash);
-  var admin = Buffer.Buffer<User>(1);
+  var adminBuffer = Buffer.Buffer<Principal>(1);
 
   // Add a new message to the wall
-  public shared ({ caller }) func writeMessage(t : Text, c : Content) : async Nat {
-    postCount += 1;
-    messageHash.put(postCount, {text = t; content = c; creator = caller; vote = 0; comments = []});
-    return postCount;
+  public shared ({ caller }) func writeMessage(t : Text, c : Content) : async Result.Result<Nat, Text> {
+    let isReg =  User.isRegistered(userHash, caller);
+    if(isReg) {  
+      postCount += 1;
+      messageHash.put(postCount, {text = t; content = c; creator = caller; vote = 0; comments = []});
+      return #ok(postCount);
+    } else { 
+      return #err("Can't post a message, invalid user.") 
+    };
   };
 
   // Get a specific message by ID
@@ -94,8 +100,13 @@ actor class StudentWall() {
   public shared ({ caller }) func deleteMessage(messageId : Nat) : async Result.Result<(), Text> {
     let msg : ?Message = messageHash.remove(messageId);
     switch(msg) {
-      case(?msg) {  
-        return #ok();
+      case(?msg) {
+        if (Principal.equal(msg.creator, caller) or User.isAdmin(adminBuffer, caller)) {
+          messageHash.put(messageId, msg);
+          return #err("Only the creator itself or an admin can delete the message.");
+        } else {
+          return #ok();
+        }
       };
       case(_) { 
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.")

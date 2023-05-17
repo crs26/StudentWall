@@ -19,6 +19,7 @@ import Response "Response";
 import Blob "mo:base/Blob";
 import _User "User";
 import Time "mo:base/Time";
+import List "mo:base/List";
 
 actor class StudentWall() {
   type Message = Type.Message;
@@ -28,10 +29,13 @@ actor class StudentWall() {
   type User = Type.User;
   type Comment = Type.Comment;
 
-  var enReg : Bool = true;
-  var enMod : Bool = false;
-  var postCount : Nat = 0;
-  var commCount : Nat = 0;
+  stable var enReg : Bool = true;
+  stable var enMod : Bool = false;
+  stable var postCount : Nat = 0;
+  stable var commCount : Nat = 0;
+
+  stable var messageList = List.nil<Type.MessageList>();
+  stable var userList = List.nil<Type.UserList>();
 
   func _natHash(n : Nat) : (Nat32) {
     Text.hash(Nat.toText(n));
@@ -372,4 +376,42 @@ actor class StudentWall() {
   public func adminEnReg(b:Bool) : async () {
     enReg := b;
   };
+
+  system func preupgrade() {
+    for ((key, value) in messageHash.entries()) {
+      messageList := List.push<Type.MessageList>({key = key; value = value}, null)
+    };
+
+    for ((key, value) in userHash.entries()) {
+      userList := List.push<Type.UserList>({key = key; value = value}, null)
+    }
+  };
+
+  system func postupgrade() {
+    loop {
+      let m = List.pop<Type.MessageList>(messageList);
+      messageList := m.1;
+      switch(m.0) {
+        case(?m) {  
+          messageHash.put(m.key, m.value);
+        };
+        case(_) {   
+
+        };
+      };
+    } while not List.isNil<Type.MessageList>(messageList);
+
+    loop {
+      let m = List.pop<Type.UserList>(userList);
+      userList := m.1;
+      switch(m.0) {
+        case(?m) {  
+          userHash.put(m.key, m.value);
+        };
+        case(_) {   
+          
+        };
+      };
+    } while not List.isNil<Type.UserList>(userList);
+  }
 };

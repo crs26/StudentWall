@@ -155,6 +155,13 @@ export default function PostCard ({ id, commented, update }) {
     return urlCreator.createObjectURL(blob)
   }
 
+  const convertEpoch = (epoch) => {
+    const x = new Date(0)
+    const e = parseInt(parseInt(epoch[0]) / 1000000)
+    x.setUTCMilliseconds(e)
+    return x
+  }
+
   if (!post) return ''
   console.log(post)
   return (
@@ -183,7 +190,7 @@ export default function PostCard ({ id, commented, update }) {
               <hr className='text-light' />
               <div className='row text-white d-flex justify-content-end'>
                 <div className='row justify-content-end mb-3'>
-                  {post.message.updatedAt.length ? `Edited: ${Date(parseInt(post.message.updatedAt))}` : `Posted: ${Date(parseInt(post.message.createdAt))}`}
+                  {post.message.updatedAt.length ? `Edited: ${convertEpoch(post.message.updatedAt)}` : `Posted: ${convertEpoch([post.message.createdAt])}`}
                 </div>
                 <div className='col-12 col-md-4 my-auto'>
                   <div className='row justify-content-center'>

@@ -105,6 +105,13 @@ export const Comment = (props) => {
     )
   }
 
+  const convertEpoch = (epoch) => {
+    const x = new Date(0)
+    const e = parseInt(parseInt(epoch[0]) / 1000000)
+    x.setUTCMilliseconds(e)
+    return x
+  }
+
   return (
     <div className='container justify-content-center'>
       {editPost?.edit
@@ -144,7 +151,7 @@ export const Comment = (props) => {
                   {renderOwnerAction(comment.comment.creator.toString(), id, comment.comment.text)}
                 </div>
                 <div className='text-light text-right'>
-                  {comment?.comment?.updatedAt.length ? `Edited: ${Date(parseInt(comment.updatedAt))}` : `Posted: ${Date(parseInt(comment.createdAt))}`}
+                  {comment?.comment.updatedAt.length ? `Edited: ${convertEpoch(comment?.comment.updatedAt)}` : `Posted: ${convertEpoch([comment?.comment.createdAt])}`}
                 </div>
               </div>
             </div>

@@ -282,11 +282,10 @@ actor class StudentWall() {
         let comment = commTemp.getOpt(commentId);
         switch(comment) {
           case(?comment) { 
-            if (Principal.equal(caller, comment.creator)) {
+            if (Principal.equal(caller, comment.creator) or _User.isAdmin(adminBuffer, caller)) {
+              messageHash.put(messageId, _Message.removeComment(msg, commentId));
               return #ok();
             } else {
-              ignore commTemp.remove(commentId);
-              messageHash.put(messageId, _Message.removeComment(msg, commentId));
               return #err("Only the creator itself or an admin can delete the comment.")
             }
           };

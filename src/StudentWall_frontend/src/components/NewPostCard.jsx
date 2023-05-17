@@ -7,6 +7,7 @@ export default function NewPostCard ({ update }) {
   const { whoamiActor, user } = useAuth()
   const [previewImage, setPreviewImage] = useState(null)
   const [imgBlob, setImgBlob] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const MAX_FILE_SIZE = 1048576
   const [post, setPost] = useState({
     subject: '',
@@ -18,6 +19,7 @@ export default function NewPostCard ({ update }) {
   })
 
   const createPost = () => {
+    setIsLoading(true)
     if (typeof post?.text !== 'undefined' && typeof post?.subject !== 'undefined') {
       if (imgBlob) {
         whoamiActor.writeMessage(post?.subject, { Image: imgBlob }).then((result) => {
@@ -29,6 +31,7 @@ export default function NewPostCard ({ update }) {
           } else {
             toast.error(result.err)
           }
+          setIsLoading(false)
         })
       } else {
         whoamiActor.writeMessage(post?.subject, { Text: post?.text }).then((result) => {
@@ -39,6 +42,7 @@ export default function NewPostCard ({ update }) {
           } else {
             toast.error(result.err)
           }
+          setIsLoading(false)
         })
       }
     } else {
@@ -122,7 +126,7 @@ export default function NewPostCard ({ update }) {
           {renderContentArea()}
           <div className='row'>
             <div className='mx-auto col-6 col-md-3 col-lg-2 justify-content-end mt-3 d-flex w-100'>
-              <button className='primary-btn create-post-btn my-md-auto' onClick={createPost}>Create Post</button>
+              <button className='primary-btn create-post-btn my-md-auto' onClick={createPost} disabled={isLoading}>Create Post</button>
             </div>
           </div>
         </div>

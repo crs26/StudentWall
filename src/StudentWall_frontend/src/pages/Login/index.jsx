@@ -30,7 +30,7 @@ export const LoginPage = () => {
       }
       reader.readAsArrayBuffer(file)
     } else {
-      console.log('No file selected')
+      toast.error('File too large')
     }
   }
 

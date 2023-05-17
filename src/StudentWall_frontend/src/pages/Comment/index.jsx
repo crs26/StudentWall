@@ -136,7 +136,7 @@ export const Comment = (props) => {
                   <div className='px-5 my-auto'>
                     <p className='m-0'>
                       <i>
-                        {comment?.text}
+                        {comment?.comment?.text}
                       </i>
                     </p>
                   </div>

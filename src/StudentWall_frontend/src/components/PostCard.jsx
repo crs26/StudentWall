@@ -73,7 +73,7 @@ export default function PostCard ({ id }) {
       const urlCreator = window.URL || window.webkitURL
       const url = urlCreator.createObjectURL(blob)
       return (
-        <div className='col-6'>
+        <div className='col-12 col-lg-6'>
           <img src={url} className='w-100' />
         </div>
       )
@@ -153,8 +153,10 @@ export default function PostCard ({ id }) {
               <div className='my-auto'>
                 <img src={toImage(post.creator.image) || '/user.png'} className='user-img my-auto' />
               </div>
-              <p className='m-0'>{post.creator.name}</p>
-              <Link to={'/user/messages/' + post.message.creator.toString()}>{shortPrincipal(post.message.creator.toString())}</Link>
+              <div>
+                <p className='m-0'>{post.creator.name}</p>
+                <Link to={'/user/messages/' + post.message.creator.toString()}>{shortPrincipal(post.message.creator.toString())}</Link>
+              </div>
             </div>
           </div>
           <div className='col-12'>

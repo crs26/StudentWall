@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { toast } from 'react-toastify'
 import { useAuth } from '../helpers/use-auth-client'
 
-export default function NewComment ({ postId, update }) {
+export default function NewComment ({ postId, update, setCommented, commented }) {
   const inText = useRef()
   const { whoamiActor, user } = useAuth()
 
@@ -11,6 +11,7 @@ export default function NewComment ({ postId, update }) {
       console.log(e)
       if (!e.err) {
         update()
+        setCommented(!commented)
         toast.success('Comment added')
       } else {
         toast.error(e.rr)

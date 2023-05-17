@@ -12,6 +12,7 @@ export const Comment = (props) => {
   const [comments, setComments] = useState()
   const [editPost, setEditPost] = useState({})
   const [editComment, setEditComment] = useState({})
+  const [commented, setCommented] = useState(false)
   const { messageId } = useParams()
   const numId = parseInt(messageId)
   const { whoamiActor, principal, user } = useAuth()
@@ -63,7 +64,7 @@ export const Comment = (props) => {
     if (creator === principal.toString()) {
       return (
         <div className='col-1' id={id}>
-          <div className='col-1 my-1'>
+          <div className='col-1 my-1 mx-auto'>
             <BiPencil
               onClick={() => {
                 setEditComment({ id, text })
@@ -111,7 +112,7 @@ export const Comment = (props) => {
           <NewPostCard setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} update={update} />
         )
         : ''}
-      <PostCard id={numId} setEditPost={setEditPost} editPost={editPost} update={update} />
+      <PostCard id={numId} setEditPost={setEditPost} setCommented={setCommented} commented={commented} editPost={editPost} update={update} />
       {comments?.ok?.map((comment, id) => {
         const blob = new global.Blob([comment?.creator?.image], { type: 'image/jpeg' })
         const urlCreator = window.URL || window.webkitURL
@@ -140,7 +141,7 @@ export const Comment = (props) => {
                       </i>
                     </p>
                   </div>
-                  {renderOwnerAction(comment.creator.toString(), id, comment.text)}
+                  {renderOwnerAction(comment.comment.creator.toString(), id, comment.comment.text)}
                 </div>
                 <div className='text-light text-right'>
                   {comment?.comment?.updatedAt.length ? `Edited: ${Date(parseInt(comment.updatedAt))}` : `Posted: ${Date(parseInt(comment.createdAt))}`}
@@ -150,7 +151,7 @@ export const Comment = (props) => {
           </div>
         )
       })}
-      <NewComment postId={numId} update={update} />
+      <NewComment postId={numId} update={update} setCommented={setCommented} commented={commented} />
       {renderEditModal()}
     </div>
   )

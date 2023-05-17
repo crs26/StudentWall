@@ -323,7 +323,7 @@ actor class StudentWall() {
         let resComm = Buffer.Buffer<Response.Comment>(1);
         var index : Nat = 0;
         for(item in msg.comments.vals()) {
-          let u = _User.getUser(userHash, msg.creator);
+          let u = _User.getUser(userHash, msg.comments[index].creator);
           switch(u) {
             case(?u) {  
               resComm.add({id = index; comment = item; creator = u})

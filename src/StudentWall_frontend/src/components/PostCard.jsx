@@ -6,10 +6,13 @@ import { useAuth } from '../helpers/use-auth-client'
 import { Modal } from '../../../../node_modules/react-bootstrap/esm/index'
 import { toast } from 'react-toastify'
 
-export default function PostCard ({ id }) {
+export default function PostCard({ id, commented }) {
   useEffect(() => {
     getUpdatedMessage(id)
-  }, [])
+    if (commented) {
+      getUpdatedMessage(id)
+    }
+  }, [id, commented])
 
   const { principal, whoamiActor } = useAuth()
   const [post, setPost] = useState(null)
@@ -175,10 +178,10 @@ export default function PostCard ({ id }) {
                 <div className='col-12 col-md-4 my-auto'>
                   <div className='row justify-content-center'>
                     <div className='col-5 text-center post-card-footer'>
-                      <p>{Number(post?.vote) > 0 ? Number(post?.vote) : '0'} votes</p>
+                      <p>{Number(post?.message?.vote) > 0 ? Number(post?.message?.vote) : '0'} votes</p>
                     </div>
                     <div className='col-5 text-center post-card-footer'>
-                      <Link to={`/comment/${id}`} state={post}>{post?.comments?.length > 0 ? post?.comments?.length : '0'} comments</Link>
+                      <Link to={`/comment/${id}`} state={post}>{post?.message?.comments?.length > 0 ? post?.message?.comments?.length : '0'} comments</Link>
                     </div>
                   </div>
                 </div>

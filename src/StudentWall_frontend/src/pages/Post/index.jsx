@@ -14,6 +14,10 @@ export const Post = () => {
   const posts = useSelector(state => state.post.value)
   const dispatch = useDispatch()
   useEffect(() => {
+    update()
+  }, [whoamiActor])
+
+  const update = () => {
     whoamiActor?.getPostCount().then(async (e) => {
       const postArray = []
       for (let i = 0; i < e; i++) {
@@ -24,17 +28,9 @@ export const Post = () => {
           postArray.push(messageToObj(p.ok))
         }
       }
-      console.log(postArray)
       dispatch(setPosts(postArray))
     }
     )
-    // update()
-  }, [whoamiActor])
-
-  const update = () => {
-    backend.getAllMessagesRanked().then((posts) => {
-      setPosts(posts)
-    })
   }
 
   return (

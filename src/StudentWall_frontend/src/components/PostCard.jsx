@@ -163,7 +163,6 @@ export default function PostCard ({ id, commented, update }) {
   }
 
   if (!post) return ''
-  console.log(post)
   return (
     <>
       <div className='px-2 mx-1'>

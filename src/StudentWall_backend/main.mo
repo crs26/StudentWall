@@ -32,7 +32,7 @@ actor class StudentWall() {
   stable var enReg : Bool = true;
   stable var enMod : Bool = false;
   stable var postCount : Nat = 0;
-  stable var commCount : Nat = 0;
+  stable var testV : Text = "global";
 
   stable var messageList = List.nil<Type.MessageList>();
   stable var userList = List.nil<Type.UserList>();
@@ -41,6 +41,7 @@ actor class StudentWall() {
     Text.hash(Nat.toText(n));
   };
 
+  var messageRanked = Buffer.Buffer<Response.Message>(1);
   var messageHash = HashMap.HashMap<Nat, Message>(1, Nat.equal, _natHash);
   var userHash = HashMap.HashMap<Principal, User>(1, Principal.equal, Principal.hash);
   var adminBuffer = Buffer.Buffer<Principal>(1);
@@ -51,6 +52,7 @@ actor class StudentWall() {
     if(isReg) {  
       postCount += 1;
       messageHash.put(postCount, {text = t; content = c; creator = caller; vote = 0; comments = []; createdAt = Time.now(); updatedAt = null});
+      messageRanked := _Message.ranked(messageHash, userHash);
       return #ok(postCount);
     } else { 
       return #err("Can't post a message, invalid user.") 
@@ -62,10 +64,10 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
-        let u = _User.getUser(userHash, value.creator);
+        let u = _User.get(userHash, value.creator);
         switch(u) {
           case(?u) {  
-            return #ok({id = messageId; message = value; creator = u});
+            return #ok({id = Nat.toText(messageId); message = value; creator = u});
           };
           case(_) { 
             // return #ok({id = messageId; message = value; creator = u});
@@ -77,6 +79,15 @@ actor class StudentWall() {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
       };
     };
+  };
+
+  // Get post count
+  public query func getPostCount() : async Nat {
+    postCount;
+  };
+
+  public query func getDataSize() : async [Nat] {
+    return [postCount, messageHash.size(), userHash.size()]
   };
 
   // Get user messages
@@ -125,6 +136,7 @@ actor class StudentWall() {
           messageHash.put(messageId, msg);
           return #err("Only the creator itself or an admin can delete the message.");
         } else {
+          messageRanked := _Message.ranked(messageHash, userHash);
           return #ok();
         }
       };
@@ -139,7 +151,9 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
-        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote + 1; comments = value.comments; createdAt = value.createdAt; updatedAt = value.updatedAt}));
+        messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote + 1; comments = value.comments; createdAt = value.createdAt; updatedAt = value.updatedAt});
+        messageRanked := _Message.ranked(messageHash, userHash);
+        return #ok();
       };
       case(_) {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
@@ -151,7 +165,9 @@ actor class StudentWall() {
     let msg : ?Message = messageHash.get(messageId);
     switch(msg) {
       case(?value) {
-        return #ok(messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote - 1; comments = value.comments; createdAt = value.createdAt; updatedAt = value.updatedAt}));
+        messageHash.put(messageId, {text = value.text; content = value.content; creator = value.creator; vote = value.vote - 1; comments = value.comments; createdAt = value.createdAt; updatedAt = value.updatedAt});
+        messageRanked := _Message.ranked(messageHash, userHash);
+        return #ok();
       };
       case(_) {
         return #err("Message with id " # Nat.toText(messageId) #  "does not exist.");
@@ -185,10 +201,10 @@ actor class StudentWall() {
       case(?user) {
         let buff = Buffer.Buffer<Response.Message>(1);
         for((key, value) in messageHash.entries()) {
-          let u = _User.getUser(userHash, value.creator);
+          let u = _User.get(userHash, value.creator);
           switch(u) {
             case(?u) {  
-              if(Principal.equal(value.creator, p)) buff.add({id = key; message = value; creator = u});
+              if(Principal.equal(value.creator, p)) buff.add({id = Nat.toText(key); message = value; creator = u});
             };
             case(_) { 
               // dont add user
@@ -215,10 +231,10 @@ actor class StudentWall() {
   public query func getAllMessagesRanked() : async [Response.Message] {
     var arr  = Buffer.Buffer<Response.Message>(1);
     for ((key, value) in messageHash.entries()) {
-      let u = _User.getUser(userHash, value.creator);
+      let u = _User.get(userHash, value.creator);
       switch(u) {
         case(?u) {  
-          arr.add({id = key; message = value; creator = u});
+          arr.add({id = Nat.toText(key); message = value; creator = u});
         };
         case(_) { 
           // dont add user
@@ -231,6 +247,29 @@ actor class StudentWall() {
     return Buffer.toArray(arr);
   };
 
+  // Get message by rank position
+  public query func getMessageByRank(rankIndex : Nat) : async Result.Result<Response.Message, Text> {
+    // let msg : ?Message = messageHash.get(messageId);
+    let msg = messageRanked.getOpt(rankIndex);
+    switch(msg) {
+      case(?value) {
+        let u = _User.get(userHash, value.message.creator);
+        switch(u) {
+          case(?u) {  
+            return #ok({id = value.id; message = value.message; creator = u});
+          };
+          case(_) { 
+            // return #ok({id = messageId; message = value; creator = u});
+            return #err("User is deactivated");
+          };
+        };
+      };
+      case(_) {
+        return #err("Message with rank index " # Nat.toText(rankIndex) #  " does not exist.");
+      };
+    };
+  };
+
   // Comment functions
   public shared({caller}) func writeComment(t : Text, messageId : Nat) : async (Result.Result<(), Text>) {
     let isReg : Bool = _User.isRegistered(userHash, caller);
@@ -238,8 +277,7 @@ actor class StudentWall() {
     if(Principal.isAnonymous(caller)) return #err("Can't write comment, anonymous user");
     let m = messageHash.get(messageId);
     switch(m) {
-      case(?m) {  
-        commCount += 1;
+      case(?m) {
         messageHash.put(messageId, _Message.addComment(m, {creator = caller; text = t; createdAt = Time.now(); updatedAt = null}));
         return #ok();
       };
@@ -326,10 +364,10 @@ actor class StudentWall() {
         let resComm = Buffer.Buffer<Response.Comment>(1);
         var index : Nat = 0;
         for(item in msg.comments.vals()) {
-          let u = _User.getUser(userHash, msg.comments[index].creator);
+          let u = _User.get(userHash, msg.comments[index].creator);
           switch(u) {
             case(?u) {  
-              resComm.add({id = index; comment = item; creator = u})
+              resComm.add({id = Nat.toText(index); comment = item; creator = u})
             };
             case(_) { };
           };
@@ -384,7 +422,8 @@ actor class StudentWall() {
 
     for ((key, value) in userHash.entries()) {
       userList := List.push<Type.UserList>({key = key; value = value}, null)
-    }
+    };
+    Debug.print("preupgrade");
   };
 
   system func postupgrade() {
@@ -413,5 +452,8 @@ actor class StudentWall() {
         };
       };
     } while not List.isNil<Type.UserList>(userList);
+
+    messageRanked := _Message.ranked(messageHash, userHash);
+    // postCount := 0;
   }
 };

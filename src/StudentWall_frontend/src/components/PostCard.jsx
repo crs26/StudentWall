@@ -69,7 +69,6 @@ export default function PostCard ({ id, commented, update }) {
       if (m.err) {
         toast.error(m.err)
       } else {
-        console.log(m.ok)
         setPost(m.ok)
       }
       update()

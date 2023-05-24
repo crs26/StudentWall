@@ -1,21 +1,25 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useAuth } from '../helpers/use-auth-client'
 
 export default function NewComment ({ postId, update, setCommented, commented }) {
   const inText = useRef()
   const { whoamiActor, user } = useAuth()
+  const [isLoading, setisLoading] = useState(false)
 
   const addComment = () => {
+    setisLoading(true)
     whoamiActor.writeComment(inText.current.value, postId).then((e) => {
       console.log(e)
       if (!e.err) {
         update()
         setCommented(!commented)
+        inText.current.value = ''
         toast.success('Comment added')
       } else {
         toast.error(e.rr)
       }
+      setisLoading(false)
     })
   }
 
@@ -42,7 +46,7 @@ export default function NewComment ({ postId, update, setCommented, commented })
         </div>
       </div>
       <div className='mx-auto col-12 col-md-3 col-lg-2 d-flex justify-content-end comment-btn-area'>
-        <button className='primary-btn mt-2 my-md-auto px-3' onClick={addComment}>Comment</button>
+        <button className='primary-btn mt-2 my-md-auto px-3' onClick={addComment} disabled={isLoading}>Comment</button>
       </div>
     </div>
   )

@@ -15,7 +15,7 @@ export const Comment = (props) => {
   const [commented, setCommented] = useState(false)
   const { messageId } = useParams()
   const numId = parseInt(messageId)
-  const { whoamiActor, principal, user } = useAuth()
+  const { whoamiActor, principal } = useAuth()
   const [showModal, setShowModal] = useState(false)
   const newCommref = useRef(null)
 
@@ -105,12 +105,19 @@ export const Comment = (props) => {
     )
   }
 
+  const convertEpoch = (epoch) => {
+    const x = new Date(0)
+    const e = parseInt(parseInt(epoch[0]) / 1000000)
+    x.setUTCMilliseconds(e)
+    return x
+  }
+
   return (
     <div className='container justify-content-center'>
       {editPost?.edit
         ? (
           <NewPostCard setEditPost={setEditPost} id={editPost?.id} subject={editPost?.subject} body={editPost?.text} edit={editPost?.edit} update={update} />
-        )
+          )
         : ''}
       <PostCard id={numId} setEditPost={setEditPost} setCommented={setCommented} commented={commented} editPost={editPost} update={update} />
       {comments?.ok?.map((comment, id) => {
@@ -144,7 +151,7 @@ export const Comment = (props) => {
                   {renderOwnerAction(comment.comment.creator.toString(), id, comment.comment.text)}
                 </div>
                 <div className='text-light text-right'>
-                  {comment?.comment?.updatedAt.length ? `Edited: ${Date(parseInt(comment.updatedAt))}` : `Posted: ${Date(parseInt(comment.createdAt))}`}
+                  {comment?.comment.updatedAt.length ? `Edited: ${convertEpoch(comment?.comment.updatedAt)}` : `Posted: ${convertEpoch([comment?.comment.createdAt])}`}
                 </div>
               </div>
             </div>

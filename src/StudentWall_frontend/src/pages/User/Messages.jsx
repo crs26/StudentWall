@@ -30,7 +30,7 @@ export const UserMessages = () => {
         posts?.map((post) => {
           if (post.id) {
             const numId = BigInt(post.id)
-            return <PostCard key={numId} id={numId} />
+            return <PostCard key={numId} id={numId} update={update} />
           }
           return ''
         })

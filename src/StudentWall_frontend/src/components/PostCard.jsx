@@ -6,7 +6,7 @@ import { useAuth } from '../helpers/use-auth-client'
 import { Modal } from '../../../../node_modules/react-bootstrap/esm/index'
 import { toast } from 'react-toastify'
 
-export default function PostCard({ id, commented }) {
+export default function PostCard ({ id, commented, update }) {
   useEffect(() => {
     getUpdatedMessage(id)
     if (commented) {
@@ -18,28 +18,37 @@ export default function PostCard({ id, commented }) {
   const [post, setPost] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [postEdit, setPostEdit] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const upVote = async (id) => {
+    setIsLoading(true)
     backend.upVote(id).then(() => {
       getUpdatedMessage(id)
       toast('Vote has been updated')
+      setIsLoading(false)
     })
   }
 
   const downVote = async (id) => {
+    setIsLoading(true)
     backend.downVote(id).then(() => {
       getUpdatedMessage(id)
       toast('Vote has been updated')
+      setIsLoading(false)
     })
   }
 
   const deletePost = async (id) => {
+    setIsLoading(true)
     backend.deleteMessage(id).then(result => {
       toast('Post has been deleted')
+      setIsLoading(false)
+      getUpdatedMessage(id)
     })
   }
 
   const editPost = () => {
+    setIsLoading(true)
     if (postEdit?.content?.Text) {
       whoamiActor.updateMessage(id, postEdit?.text, { Text: postEdit?.content.Text }).then((result) => {
         getUpdatedMessage(id)
@@ -63,6 +72,7 @@ export default function PostCard({ id, commented }) {
         console.log(m.ok)
         setPost(m.ok)
       }
+      update()
     })
   }
 
@@ -145,8 +155,14 @@ export default function PostCard({ id, commented }) {
     return urlCreator.createObjectURL(blob)
   }
 
+  const convertEpoch = (epoch) => {
+    const x = new Date(0)
+    const e = parseInt(parseInt(epoch[0]) / 1000000)
+    x.setUTCMilliseconds(e)
+    return x
+  }
+
   if (!post) return ''
-  console.log(post)
   return (
     <>
       <div className='px-2 mx-1'>
@@ -173,7 +189,7 @@ export default function PostCard({ id, commented }) {
               <hr className='text-light' />
               <div className='row text-white d-flex justify-content-end'>
                 <div className='row justify-content-end mb-3'>
-                  {post.message.updatedAt.length ? `Edited: ${Date(parseInt(post.message.updatedAt))}` : `Posted: ${Date(parseInt(post.message.createdAt))}`}
+                  {post.message.updatedAt.length ? `Edited: ${convertEpoch(post.message.updatedAt)}` : `Posted: ${convertEpoch([post.message.createdAt])}`}
                 </div>
                 <div className='col-12 col-md-4 my-auto'>
                   <div className='row justify-content-center'>
@@ -186,7 +202,7 @@ export default function PostCard({ id, commented }) {
                   </div>
                 </div>
 
-                <div className={`col-md-1 col-2 ${post?.message.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
+                <div className={`col-md-1 col-2 ${post?.message.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'} ${isLoading ? 'pe-none' : ''}`}>
                   <BiPencil onClick={() => {
                     setPostEdit(post.message)
                     setShowModal(true)
@@ -194,14 +210,14 @@ export default function PostCard({ id, commented }) {
                   />
                 </div>
 
-                <div className={`col-md-1 col-2 ${post?.message.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'}`}>
+                <div className={`col-md-1 col-2 ${post?.message.creator.toString() === principal?.toString() ? 'd-block' : 'd-none'} ${isLoading ? 'pe-none' : ''}`}>
                   <BiTrash onClick={() => Number(deletePost(id))} />
                 </div>
-                <div className='col-md-1 col-2 '>
-                  <BiUpvote onClick={() => Number(upVote(id))} />
+                <div className={`col-md-1 col-2 ${isLoading ? 'pe-none' : ''}`}>
+                  <BiUpvote onClick={() => Number(upVote(id))} disabled />
                 </div>
 
-                <div className='col-md-1 col-2 '>
+                <div className={`col-md-1 col-2 ${isLoading ? 'pe-none' : ''}`}>
                   <BiDownvote onClick={() => Number(downVote(id))} />
                 </div>
 

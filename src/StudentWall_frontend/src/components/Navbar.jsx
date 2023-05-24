@@ -42,7 +42,7 @@ export const Navbar = () => {
           </Link>
         </div>
         <div className='col-4 mx-auto d-flex justify-content-center'>
-          <img src='/logo2-tp.svg' className='img-fluid w-50' />
+          <img src='/logo2-tp.svg' className='img-fluid' />
         </div>
         <ul className='mobile-nav my-auto'>
           <li className='my-auto d-flex'>

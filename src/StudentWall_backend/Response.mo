@@ -1,13 +1,13 @@
 import Type "Types"
 module {
     public type Message = {
-        id : Nat;
+        id : Text;
         message : Type.Message;
         creator : Type.User;
     };
 
     public type Comment = {
-        id : Nat;
+        id : Text;
         comment : Type.Comment;
         creator : Type.User;
     }

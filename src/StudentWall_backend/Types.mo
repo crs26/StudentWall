@@ -38,4 +38,14 @@ module {
     image : Blob;
     allowMsg : Bool;
   };
+
+  public type MessageList = {
+    key : Nat;
+    value : Message;
+  };
+
+  public type UserList = {
+    key : Principal;
+    value : User;
+  }
 };

@@ -6,6 +6,15 @@ export const messageToObj = (data) => {
   data.message.image = blobToImage(data.message.image)
   data.creator.image = blobToImage(data.creator.image)
   data.message.creator = data.message.creator.toString()
+  if (data.message.content.Image) obj.message.content.Image = blobToImage(data.message.content.Image)
+  data.message.updatedAt = parseInt(data.message.updatedAt)
+  for (let index = 0; index < data.message.comments.length; index++) {
+    const element = data.message.comments[index]
+    console.log(element.creator)
+    obj.message.comments[index].creator = element.creator.toString()
+    obj.message.comments[index].createdAt = parseInt(element.createdAt)
+    obj.message.comments[index].updatedAt = parseInt(element.updatedAt)
+  }
   console.log(obj)
   return obj
 }

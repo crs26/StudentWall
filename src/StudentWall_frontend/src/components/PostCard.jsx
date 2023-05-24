@@ -182,8 +182,10 @@ export default function PostCard ({ id, commented, update }) {
             <div className='row justify-content-center'>
               <div className='col-12 my-auto py-4'>
                 <div className='row px-md-5'>
-                  <h5>{post?.message.text}</h5>
-                  {renderContent()}
+                  <Link to={`/comment/${id}`}>
+                    <h5>{post?.message.text}</h5>
+                    {renderContent()}
+                  </Link>
                 </div>
               </div>
               <hr className='text-light' />

@@ -41,7 +41,7 @@ export const LoginPage = () => {
     })
   }
 
-  console.log(user)
+  if (user?.name) window.location.replace('/')
 
   return (
     <div className='row d-flex justify-content-center align-items-center m-0' style={{ height: '90vh', width: '100vw' }}>

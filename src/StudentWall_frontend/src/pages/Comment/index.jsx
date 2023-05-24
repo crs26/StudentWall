@@ -134,7 +134,7 @@ export const Comment = (props) => {
                   </div>
                 </div>
                 <div className='justify-content-between d-flex my-auto'>
-                  <div className='px-5 my-auto'>
+                  <div className='px-5 my-auto' style={{ overflow: 'auto' }}>
                     <p className='m-0'>
                       <i>
                         {comment?.comment?.text}

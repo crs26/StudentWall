@@ -71,7 +71,7 @@ export const LoginPage = () => {
                     </label>
                     <input type='file' id='file-input' accept='image/*' className='col-6 btn btn-primary d-none' onChange={handleFileChange} />
                     <button className={`col-6 btn btn-primary w-50 col-md-6 ${imgBlob && userName.length ? '' : 'd-none'}`} disabled={!isAuthenticated && userName.length > 0} onClick={handleRegister}>Register</button>
-                    <p className='text-light'>User display picture is reuired</p>
+                    <p className='text-light'>User display picture is required</p>
                   </div>
                 </div>
               </div>

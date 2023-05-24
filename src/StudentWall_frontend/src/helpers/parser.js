@@ -10,12 +10,10 @@ export const messageToObj = (data) => {
   data.message.updatedAt = parseInt(data.message.updatedAt)
   for (let index = 0; index < data.message.comments.length; index++) {
     const element = data.message.comments[index]
-    console.log(element.creator)
     obj.message.comments[index].creator = element.creator.toString()
     obj.message.comments[index].createdAt = parseInt(element.createdAt)
     obj.message.comments[index].updatedAt = parseInt(element.updatedAt)
   }
-  console.log(obj)
   return obj
 }
 

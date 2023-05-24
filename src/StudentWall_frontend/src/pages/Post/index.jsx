@@ -7,16 +7,18 @@ import { setPosts } from '../../app/postSlice'
 import { messageToObj } from '../../helpers/parser'
 
 export const Post = () => {
-  // const [posts, setPosts] = useState([{}])
   const [editPost, setEditPost] = useState({})
   const { isAuthenticated, user, whoamiActor } = useAuth()
   const posts = useSelector(state => state.post.value)
   const dispatch = useDispatch()
   useEffect(() => {
     update()
-  }, [whoamiActor])
+  }, [isAuthenticated])
 
   const update = () => {
+    if (posts.length > 0) {
+      return
+    }
     whoamiActor?.getPostCount().then(async (e) => {
       const postArray = []
       for (let i = 0; i < e; i++) {
@@ -28,8 +30,7 @@ export const Post = () => {
         }
       }
       dispatch(setPosts(postArray))
-    }
-    )
+    })
   }
 
   return (
